@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utsav — India's Premier Event Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Poppins:wght@300;400;500;600;700&family=Noto+Serif+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #FF6B00;
+    --deep-red: #C0392B;
+    --marigold: #F4A300;
+    --ivory: #FFF8EE;
+    --dark: #1A0A00;
+    --card-bg: #FFFBF4;
+    --muted: #8B6F47;
+    --gold: #D4AF37;
+    --rose: #E8566A;
+    --green: #2E7D32;
+    --teal: #00796B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--ivory);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* NAVBAR */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(255,248,238,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--marigold);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+
+  .nav-logo {
+    font-family: 'Yeseva One', serif;
+    font-size: 1.8rem;
+    color: var(--saffron);
+    letter-spacing: 1px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .nav-logo span { color: var(--deep-red); }
+
+  .nav-links {
+    display: flex; gap: 28px; list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    text-decoration: none; color: var(--dark);
+    font-weight: 500; font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--saffron); }
+
+  .nav-cta {
+    background: linear-gradient(135deg, var(--saffron), var(--deep-red));
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: 600 !important;
+  }
+
+  .location-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--marigold)22;
+    border: 1px solid var(--marigold);
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 0.82rem; color: var(--saffron); font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding-top: 64px;
+    background: linear-gradient(160deg, #FFF8EE 0%, #FFF0D4 40%, #FFE4C4 100%);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 55%; height: 100%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Ccircle cx='400' cy='400' r='350' fill='%23FF6B0008'/%3E%3Ccircle cx='400' cy='400' r='280' fill='%23FF6B0010'/%3E%3Ccircle cx='400' cy='400' r='200' fill='%23FF6B0015'/%3E%3C/svg%3E") center/cover;
+  }
+
+  .rangoli-bg {
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    font-size: 18rem; opacity: 0.06; user-select: none;
+    animation: spin 60s linear infinite;
+  }
+
+  @keyframes spin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 8%;
+    max-width: 640px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--saffron)15; border: 1px solid var(--saffron)50;
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 0.8rem; font-weight: 600; color: var(--saffron);
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Yeseva One', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1;
+    color: var(--dark);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--saffron), var(--deep-red));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    font-size: 1.05rem; color: var(--muted);
+    line-height: 1.7; margin-bottom: 32px;
+  }
+
+  /* SEARCH BAR - Swiggy style */
+  .search-box {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(255,107,0,0.15);
+    padding: 8px;
+    display: flex; gap: 8px;
+    margin-bottom: 28px;
+    border: 2px solid transparent;
+    transition: border 0.3s;
+  }
+
+  .search-box:focus-within { border-color: var(--marigold); }
+
+  .search-input {
+    flex: 1; border: none; outline: none;
+    padding: 10px 16px;
+    font-size: 0.95rem; font-family: 'Poppins', sans-serif;
+    background: transparent; color: var(--dark);
+  }
+
+  .search-select {
+    border: none; outline: none;
+    padding: 10px 12px;
+    font-size: 0.88rem; font-family: 'Poppins', sans-serif;
+    background: var(--ivory); border-radius: 10px;
+    color: var(--muted); cursor: pointer;
+  }
+
+  .search-btn {
+    background: linear-gradient(135deg, var(--saffron), var(--deep-red));
+    color: white; border: none;
+    padding: 12px 24px; border-radius: 12px;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .search-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,107,0,0.4); }
+
+  .hero-stats {
+    display: flex; gap: 28px;
+  }
+
+  .stat { text-align: center; }
+  .stat-num { font-size: 1.4rem; font-weight: 700; color: var(--saffron); }
+  .stat-label { font-size: 0.75rem; color: var(--muted); }
+
+  /* SECTION HEADERS */
+  .section { padding: 60px 5%; }
+  .section-header { text-align: center; margin-bottom: 40px; }
+  .section-header h2 {
+    font-family: 'Yeseva One', serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    color: var(--dark); margin-bottom: 10px;
+  }
+  .section-header p { color: var(--muted); font-size: 1rem; }
+  .divider {
+    width: 60px; height: 4px;
+    background: linear-gradient(90deg, var(--saffron), var(--marigold));
+    margin: 12px auto; border-radius: 2px;
+  }
+
+  /* EVENT CATEGORIES */
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .category-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    position: relative; overflow: hidden;
+  }
+
+  .category-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .category-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(255,107,0,0.15); border-color: var(--accent); }
+  .category-card:hover::before { transform: scaleX(1); }
+
+  .category-emoji { font-size: 2.8rem; margin-bottom: 12px; }
+  .category-name { font-weight: 600; font-size: 0.95rem; color: var(--dark); margin-bottom: 4px; }
+  .category-count { font-size: 0.78rem; color: var(--muted); }
+
+  /* VENDOR CARDS - Zomato style */
+  .vendors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .vendor-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  .vendor-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
+
+  .vendor-img {
+    height: 180px;
+    background: var(--gradient);
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+    overflow: hidden;
+  }
+
+  .vendor-img::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.3));
+  }
+
+  .vendor-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--green);
+    color: white; padding: 4px 10px;
+    border-radius: 6px; font-size: 0.72rem; font-weight: 700;
+    z-index: 1;
+  }
+
+  .vendor-discount {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--deep-red);
+    color: white; padding: 4px 10px;
+    border-radius: 6px; font-size: 0.72rem; font-weight: 700;
+    z-index: 1;
+  }
+
+  .vendor-info { padding: 16px; }
+
+  .vendor-top {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; margin-bottom: 6px;
+  }
+
+  .vendor-name { font-weight: 700; font-size: 1rem; color: var(--dark); }
+
+  .rating {
+    display: flex; align-items: center; gap: 4px;
+    background: var(--green); color: white;
+    padding: 3px 8px; border-radius: 6px;
+    font-size: 0.8rem; font-weight: 700;
+  }
+
+  .vendor-category { font-size: 0.82rem; color: var(--muted); margin-bottom: 10px; }
+
+  .vendor-meta {
+    display: flex; gap: 16px;
+    font-size: 0.8rem; color: var(--muted);
+    border-top: 1px solid var(--ivory);
+    padding-top: 10px; margin-top: 6px;
+  }
+
+  .vendor-meta span { display: flex; align-items: center; gap: 4px; }
+
+  /* QUICK FILTERS */
+  .filters {
+    display: flex; gap: 10px; overflow-x: auto;
+    padding-bottom: 8px; margin-bottom: 32px;
+    scrollbar-width: none;
+  }
+
+  .filter-pill {
+    white-space: nowrap;
+    padding: 8px 18px; border-radius: 25px;
+    font-size: 0.85rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    border: 2px solid #E8D5B7;
+    color: var(--muted); background: white;
+  }
+
+  .filter-pill.active, .filter-pill:hover {
+    background: var(--saffron);
+    border-color: var(--saffron);
+    color: white;
+  }
+
+  /* HOW IT WORKS */
+  .how-section {
+    background: linear-gradient(135deg, var(--dark) 0%, #2D0F00 100%);
+    padding: 80px 5%;
+  }
+
+  .how-section .section-header h2 { color: white; }
+  .how-section .section-header p { color: #C9A87C; }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 32px; margin-top: 20px;
+  }
+
+  .step {
+    text-align: center; color: white;
+    position: relative;
+  }
+
+  .step-num {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--saffron), var(--marigold));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Yeseva One', serif; font-size: 1.6rem;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 24px rgba(255,107,0,0.4);
+  }
+
+  .step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+  .step p { font-size: 0.85rem; color: #C9A87C; line-height: 1.6; }
+
+  /* BANNER */
+  .promo-banner {
+    background: linear-gradient(135deg, var(--saffron), #FF3E00);
+    border-radius: 20px; padding: 32px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 40px 5%;
+    position: relative; overflow: hidden;
+  }
+
+  .promo-banner::before {
+    content: '🎊';
+    position: absolute; right: 20px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 8rem; opacity: 0.15;
+  }
+
+  .promo-text h3 {
+    font-family: 'Yeseva One', serif;
+    font-size: 1.6rem; color: white; margin-bottom: 6px;
+  }
+  .promo-text p { color: rgba(255,255,255,0.85); font-size: 0.95rem; }
+
+  .promo-btn {
+    background: white; color: var(--saffron);
+    padding: 12px 28px; border-radius: 12px;
+    font-weight: 700; font-size: 0.95rem;
+    border: none; cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s;
+  }
+
+  .promo-btn:hover { transform: scale(1.05); }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .testimonial {
+    background: white; padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    border-left: 4px solid var(--saffron);
+  }
+
+  .testimonial-text {
+    font-size: 0.9rem; line-height: 1.7;
+    color: var(--muted); margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .author-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    background: linear-gradient(135deg, var(--marigold), var(--saffron));
+  }
+
+  .author-name { font-weight: 600; font-size: 0.9rem; }
+  .author-event { font-size: 0.78rem; color: var(--muted); }
+
+  /* CITY SELECTOR */
+  .cities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .city-card {
+    background: white; padding: 16px;
+    border-radius: 14px; text-align: center;
+    cursor: pointer; transition: all 0.25s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .city-card:hover {
+    background: var(--saffron);
+    color: white;
+    transform: translateY(-3px);
+  }
+
+  .city-card:hover .city-count { color: rgba(255,255,255,0.8); }
+  .city-emoji { font-size: 1.8rem; margin-bottom: 6px; }
+  .city-name { font-weight: 600; font-size: 0.9rem; }
+  .city-count { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000; display: none;
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: white; border-radius: 24px;
+    width: 100%; max-width: 560px;
+    max-height: 90vh; overflow-y: auto;
+    animation: modalIn 0.3s ease;
+  }
+
+  @keyframes modalIn {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-header {
+    padding: 24px; border-bottom: 1px solid #F0E6D3;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .modal-header h3 { font-family: 'Yeseva One', serif; font-size: 1.3rem; }
+  .modal-close {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--ivory); border: none;
+    font-size: 1.2rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .modal-body { padding: 24px; }
+
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--dark); }
+  .form-input {
+    width: 100%; padding: 12px 16px;
+    border: 2px solid #E8D5B7; border-radius: 12px;
+    font-size: 0.9rem; font-family: 'Poppins', sans-serif;
+    outline: none; transition: border 0.2s;
+    background: var(--ivory);
+  }
+  .form-input:focus { border-color: var(--saffron); background: white; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--saffron), var(--deep-red));
+    color: white; border: none; padding: 14px;
+    border-radius: 12px; font-size: 1rem; font-weight: 600;
+    cursor: pointer; font-family: 'Poppins', sans-serif;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 8px;
+  }
+
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,0,0.35); }
+
+  /* FLOATING CART */
+  .cart-fab {
+    position: fixed; bottom: 24px; right: 24px;
+    background: linear-gradient(135deg, var(--saffron), var(--deep-red));
+    color: white; border: none;
+    width: 60px; height: 60px; border-radius: 50%;
+    font-size: 1.5rem; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255,107,0,0.4);
+    z-index: 999;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s;
+  }
+
+  .cart-fab:hover { transform: scale(1.1); }
+
+  .cart-badge {
+    position: absolute; top: -4px; right: -4px;
+    background: var(--dark); color: white;
+    border-radius: 50%; width: 22px; height: 22px;
+    font-size: 0.7rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    color: #C9A87C; padding: 60px 5% 30px;
+  }
+
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 40px;
+  }
+
+  .footer-brand h2 {
+    font-family: 'Yeseva One', serif;
+    color: var(--saffron); font-size: 1.6rem; margin-bottom: 10px;
+  }
+
+  .footer-brand p { font-size: 0.85rem; line-height: 1.7; opacity: 0.7; margin-bottom: 20px; }
+
+  .social-links { display: flex; gap: 12px; }
+  .social-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); border: none;
+    color: #C9A87C; font-size: 0.9rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .social-btn:hover { background: var(--saffron); color: white; }
+
+  .footer-col h4 { color: white; margin-bottom: 16px; font-size: 0.9rem; }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 8px; }
+  .footer-links a { color: #C9A87C; text-decoration: none; font-size: 0.85rem; opacity: 0.7; transition: opacity 0.2s; }
+  .footer-links a:hover { opacity: 1; color: var(--marigold); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 24px; text-align: center;
+    font-size: 0.82rem; opacity: 0.5;
+  }
+
+  /* SECTION BG VARIANTS */
+  .bg-warm { background: #FFF5E6; }
+  .bg-white { background: white; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .vendor-card, .category-card, .testimonial {
+    animation: fadeUp 0.5s ease both;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .promo-banner { flex-direction: column; gap: 20px; text-align: center; }
+    .hero-stats { gap: 16px; }
+    .form-row { grid-template-columns: 1fr; }
+    .search-box { flex-direction: column; }
+  }
+
+  /* PACKAGE CARDS */
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .package-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px;
+    border: 2px solid #E8D5B7;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .package-card.featured {
+    border-color: var(--saffron);
+    background: linear-gradient(160deg, #FFF8EE, #FFF0D4);
+  }
+
+  .package-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
+
+  .package-tag {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--saffron); color: white;
+    padding: 4px 16px; border-radius: 12px;
+    font-size: 0.75rem; font-weight: 700; white-space: nowrap;
+  }
+
+  .package-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .package-name { font-family: 'Yeseva One', serif; font-size: 1.2rem; margin-bottom: 4px; }
+  .package-price { font-size: 1.6rem; font-weight: 700; color: var(--saffron); margin-bottom: 4px; }
+  .package-price span { font-size: 0.85rem; color: var(--muted); font-weight: 400; }
+  .package-desc { font-size: 0.83rem; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+  .package-features { list-style: none; margin-bottom: 20px; }
+  .package-features li {
+    font-size: 0.83rem; padding: 4px 0;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--dark);
+  }
+  .package-features li::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+  .book-btn {
+    width: 100%; padding: 12px;
+    border-radius: 12px; border: 2px solid var(--saffron);
+    color: var(--saffron); font-weight: 600; font-size: 0.9rem;
+    background: transparent; cursor: pointer;
+    font-family: 'Poppins', sans-serif; transition: all 0.2s;
+  }
+
+  .book-btn:hover, .package-card.featured .book-btn {
+    background: var(--saffron); color: white;
+  }
+
+  /* NAV active states for SPA */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* BOTTOM NAV - Mobile */
+  .bottom-nav {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: white; border-top: 2px solid #F0E6D3;
+    z-index: 998; padding: 8px 0 4px;
+  }
+
+  @media (max-width: 768px) {
+    .bottom-nav { display: flex; justify-content: space-around; }
+    body { padding-bottom: 70px; }
+  }
+
+  .bnav-item {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2px; cursor: pointer; padding: 4px 12px;
+    color: var(--muted); font-size: 0.7rem;
+  }
+
+  .bnav-item.active { color: var(--saffron); }
+  .bnav-icon { font-size: 1.4rem; }
+
+  /* Special deco pattern */
+  .mandala-divider {
+    text-align: center; font-size: 1.5rem;
+    letter-spacing: 12px; color: var(--marigold);
+    opacity: 0.5; margin: 20px 0;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">🪔 Utsav<span>.in</span></div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showSection('home')">Home</a></li>
+    <li><a href="#" onclick="showSection('events')">Events</a></li>
+    <li><a href="#" onclick="showSection('vendors')">Vendors</a></li>
+    <li><a href="#" onclick="showSection('packages')">Packages</a></li>
+    <li><a href="#" onclick="openModal('loginModal')">Login</a></li>
+    <li><a href="#" class="nav-cta" onclick="openModal('bookModal')">Plan Event</a></li>
+  </ul>
+  <div class="location-pill" onclick="openModal('locationModal')">
+    📍 Hyderabad ▾
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div id="home" class="page active">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="rangoli-bg">🌸</div>
+    <div class="hero-content">
+      <div class="hero-badge">🎊 India's #1 Event Management Platform</div>
+      <h1>Plan Your <span class="highlight">Shaadi</span> &<br>Every Celebration</h1>
+      <p>From lavish weddings to heartfelt cradle ceremonies — find top-rated vendors, photographers, caterers & decorators near you. Trusted by 2L+ families.</p>
+
+      <div class="search-box">
+        <input class="search-input" type="text" placeholder="Search vendors, decorators, caterers...">
+        <select class="search-select">
+          <option>Wedding</option>
+          <option>Birthday</option>
+          <option>Cradle</option>
+          <option>Engagement</option>
+          <option>Navratri</option>
+        </select>
+        <button class="search-btn" onclick="showSection('vendors')">🔍 Search</button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">2L+</div><div class="stat-label">Happy Families</div></div>
+        <div class="stat"><div class="stat-num">5000+</div><div class="stat-label">Trusted Vendors</div></div>
+        <div class="stat"><div class="stat-num">48</div><div class="stat-label">Cities Covered</div></div>
+        <div class="stat"><div class="stat-num">4.8★</div><div class="stat-label">App Rating</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="section bg-white">
+    <div class="section-header">
+      <h2>Celebrations We Specialise In</h2>
+      <div class="divider"></div>
+      <p>Every Indian tradition, every milestone — all in one place</p>
+    </div>
+    <div class="categories-grid">
+      <div class="category-card" style="--accent: #C0392B" onclick="filterVendors('Wedding')">
+        <div class="category-emoji">💍</div>
+        <div class="category-name">Wedding / Shaadi</div>
+        <div class="category-count">1,240 vendors</div>
+      </div>
+      <div class="category-card" style="--accent: #F4A300" onclick="filterVendors('Cradle')">
+        <div class="category-emoji">🍼</div>
+        <div class="category-name">Cradle Ceremony</div>
+        <div class="category-count">420 vendors</div>
+      </div>
+      <div class="category-card" style="--accent: #FF6B00" onclick="filterVendors('Birthday')">
+        <div class="category-emoji">🎂</div>
+        <div class="category-name">Birthday Party</div>
+        <div class="category-count">870 vendors</div>
+      </div>
+      <div class="category-card" style="--accent: #E91E63" onclick="filterVendors('Engagement')">
+        <div class="category-emoji">💒</div>
+        <div class="category-name">Engagement</div>
+        <div class="category-count">560 vendors</div>
+      </div>
+      <div class="category-card" style="--accent: #9C27B0" onclick="filterVendors('Festival')">
+        <div class="category-emoji">🪔</div>
+        <div class="category-name">Navratri / Diwali</div>
+        <div class="category-count">310 vendors</div>
+      </div>
+      <div class="category-card" style="--accent: #00796B" onclick="filterVendors('Thread')">
+        <div class="category-emoji">🧵</div>
+        <div class="category-name">Thread Ceremony</div>
+        <div class="category-count">190 vendors</div>
+      </div>
+      <div class="category-card" style="--accent: #1565C0" onclick="filterVendors('Anniversary')">
+        <div class="category-emoji">🥂</div>
+        <div class="category-name">Anniversary</div>
+        <div class="category-count">380 vendors</div>
+      </div>
+      <div class="category-card" style="--accent: #2E7D32" onclick="filterVendors('Haldi')">
+        <div class="category-emoji">🌿</div>
+        <div class="category-name">Haldi / Mehendi</div>
+        <div class="category-count">280 vendors</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMO BANNER -->
+  <div class="promo-banner">
+    <div class="promo-text">
+      <h3>🎁 Get ₹5,000 Off Your First Booking!</h3>
+      <p>Use code UTSAV2024 on wedding packages. Limited time offer for new users.</p>
+    </div>
+    <button class="promo-btn" onclick="openModal('bookModal')">Claim Offer →</button>
+  </div>
+
+  <!-- TOP VENDORS -->
+  <section class="section bg-warm">
+    <div class="section-header">
+      <h2>Top-Rated Vendors Near You</h2>
+      <div class="divider"></div>
+      <p>Verified & reviewed by thousands of happy families in Hyderabad</p>
+    </div>
+
+    <div class="filters">
+      <div class="filter-pill active">All</div>
+      <div class="filter-pill">Photographers 📷</div>
+      <div class="filter-pill">Caterers 🍽️</div>
+      <div class="filter-pill">Decorators 🌸</div>
+      <div class="filter-pill">Makeup Artists 💄</div>
+      <div class="filter-pill">Mehendi Artists 🌿</div>
+      <div class="filter-pill">Pandit Ji 🙏</div>
+      <div class="filter-pill">DJ & Entertainment 🎵</div>
+      <div class="filter-pill">Wedding Cars 🚗</div>
+    </div>
+
+    <div class="vendors-grid">
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #FF6B00, #C0392B);">
+          📸
+          <div class="vendor-badge">⚡ Top Rated</div>
+          <div class="vendor-discount">20% OFF</div>
+        </div>
+        <div class="vendor-info">
+          <div class="vendor-top">
+            <div class="vendor-name">Roshan Wedding Photography</div>
+            <div class="rating">⭐ 4.9</div>
+          </div>
+          <div class="vendor-category">📷 Photography & Videography</div>
+          <div class="vendor-meta">
+            <span>💰 ₹45,000 onwards</span>
+            <span>📍 Banjara Hills</span>
+            <span>✅ 340 bookings</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #F4A300, #FF6B00);">
+          🌸
+          <div class="vendor-badge">🏆 Premium</div>
+        </div>
+        <div class="vendor-info">
+          <div class="vendor-top">
+            <div class="vendor-name">Royal Blooms Decor</div>
+            <div class="rating">⭐ 4.8</div>
+          </div>
+          <div class="vendor-category">🌸 Floral & Event Decoration</div>
+          <div class="vendor-meta">
+            <span>💰 ₹30,000 onwards</span>
+            <span>📍 Jubilee Hills</span>
+            <span>✅ 210 bookings</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #E91E63, #9C27B0);">
+          💄
+          <div class="vendor-badge">✨ Trending</div>
+          <div class="vendor-discount">15% OFF</div>
+        </div>
+        <div class="vendor-info">
+          <div class="vendor-top">
+            <div class="vendor-name">Ayesha Bridal Studio</div>
+            <div class="rating">⭐ 4.9</div>
+          </div>
+          <div class="vendor-category">💄 Bridal Makeup & Grooming</div>
+          <div class="vendor-meta">
+            <span>💰 ₹15,000 onwards</span>
+            <span>📍 Madhapur</span>
+            <span>✅ 480 bookings</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #2E7D32, #00796B);">
+          🍽️
+          <div class="vendor-badge">🌿 Veg Only</div>
+        </div>
+        <div class="vendor-info">
+          <div class="vendor-top">
+            <div class="vendor-name">Grand Feast Caterers</div>
+            <div class="rating">⭐ 4.7</div>
+          </div>
+          <div class="vendor-category">🍽️ Wedding & Event Catering</div>
+          <div class="vendor-meta">
+            <span>💰 ₹800/plate</span>
+            <span>📍 Secunderabad</span>
+            <span>✅ 600 bookings</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #1565C0, #0097A7);">
+          🎵
+          <div class="vendor-badge">🔥 Popular</div>
+        </div>
+        <div class="vendor-info">
+          <div class="vendor-top">
+            <div class="vendor-name">DJ Siddharth Events</div>
+            <div class="rating">⭐ 4.6</div>
+          </div>
+          <div class="vendor-category">🎵 DJ, Band & Entertainment</div>
+          <div class="vendor-meta">
+            <span>💰 ₹25,000/event</span>
+            <span>📍 Gachibowli</span>
+            <span>✅ 290 bookings</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #BF360C, #E65100);">
+          🙏
+          <div class="vendor-badge">🕉️ Verified Pandit</div>
+        </div>
+        <div class="vendor-info">
+          <div class="vendor-top">
+            <div class="vendor-name">Pt. Ramesh Sharma</div>
+            <div class="rating">⭐ 5.0</div>
+          </div>
+          <div class="vendor-category">🙏 Pandit & Ritual Services</div>
+          <div class="vendor-meta">
+            <span>💰 ₹5,000 onwards</span>
+            <span>📍 Old City</span>
+            <span>✅ 1,200 bookings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <div class="section-header">
+      <h2>How Utsav Works</h2>
+      <div class="divider"></div>
+      <p>Book your dream event in 4 simple steps</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Select Event Type</h3>
+        <p>Choose from weddings, birthdays, cradle ceremonies, festivals & more Indian celebrations</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Browse Vendors</h3>
+        <p>Compare verified caterers, decorators, photographers & more by rating, price & location</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Book & Pay Securely</h3>
+        <p>Instant confirmation with UPI, cards or EMI. Get a dedicated event manager assigned</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Celebrate!</h3>
+        <p>Sit back and enjoy while we coordinate every detail of your perfect Utsav</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CITIES -->
+  <section class="section bg-white">
+    <div class="section-header">
+      <h2>We're Across India</h2>
+      <div class="divider"></div>
+      <p>Available in 48+ cities and growing every month</p>
+    </div>
+    <div class="cities-grid">
+      <div class="city-card"><div class="city-emoji">🏙️</div><div class="city-name">Hyderabad</div><div class="city-count">1,240 vendors</div></div>
+      <div class="city-card"><div class="city-emoji">🌊</div><div class="city-name">Mumbai</div><div class="city-count">1,800 vendors</div></div>
+      <div class="city-card"><div class="city-emoji">🌿</div><div class="city-name">Bangalore</div><div class="city-count">1,100 vendors</div></div>
+      <div class="city-card"><div class="city-emoji">🏛️</div><div class="city-name">Delhi NCR</div><div class="city-count">2,100 vendors</div></div>
+      <div class="city-card"><div class="city-emoji">🎨</div><div class="city-name">Chennai</div><div class="city-count">780 vendors</div></div>
+      <div class="city-card"><div class="city-emoji">🌸</div><div class="city-name">Pune</div><div class="city-count">640 vendors</div></div>
+      <div class="city-card"><div class="city-emoji">🕌</div><div class="city-name">Jaipur</div><div class="city-count">520 vendors</div></div>
+      <div class="city-card"><div class="city-emoji">⛪</div><div class="city-name">Kochi</div><div class="city-count">410 vendors</div></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section bg-warm">
+    <div class="section-header">
+      <h2>Stories That Warm Our Hearts</h2>
+      <div class="divider"></div>
+      <p>Over 2 lakh families have trusted Utsav for their most precious moments</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <div class="testimonial-text">"Utsav made our daughter's wedding in Hyderabad absolutely magical. The decorator they suggested was beyond our expectations, and the photographer captured every emotion perfectly. Like having a best friend plan your wedding!"</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">👩</div>
+          <div><div class="author-name">Priya Venkatesh</div><div class="author-event">Wedding · Hyderabad</div></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-text">"From our baby's cradle ceremony to our 25th anniversary, Utsav has been our go-to for every celebration. The pandit they connected us with was wonderful and the catering was delicious. Highly recommend!"</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">👨</div>
+          <div><div class="author-name">Rajesh Sharma</div><div class="author-event">Cradle & Anniversary · Delhi</div></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-text">"My son's first birthday was everything I dreamed of. The themed decoration, the cake artist, the entertainment — all coordinated seamlessly. Worth every rupee and then some! The team was incredible."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">👩</div>
+          <div><div class="author-name">Ananya Krishnan</div><div class="author-event">Birthday Party · Bangalore</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end home -->
+
+<!-- VENDORS PAGE -->
+<div id="vendors" class="page">
+  <div style="padding-top:80px; background: linear-gradient(160deg, #FFF8EE, #FFF0D4); padding: 80px 5% 40px;">
+    <h1 style="font-family:'Yeseva One',serif; font-size:2rem; margin-bottom:8px;">Browse All Vendors</h1>
+    <p style="color:var(--muted); margin-bottom:24px;">5,000+ verified vendors across India</p>
+    <div class="search-box" style="max-width:600px;">
+      <input class="search-input" type="text" placeholder="Search by name, category, location...">
+      <button class="search-btn">🔍 Search</button>
+    </div>
+  </div>
+  <section class="section bg-white">
+    <div class="filters">
+      <div class="filter-pill active" onclick="setFilter(this)">All Categories</div>
+      <div class="filter-pill" onclick="setFilter(this)">📷 Photography</div>
+      <div class="filter-pill" onclick="setFilter(this)">🌸 Decoration</div>
+      <div class="filter-pill" onclick="setFilter(this)">🍽️ Catering</div>
+      <div class="filter-pill" onclick="setFilter(this)">💄 Makeup</div>
+      <div class="filter-pill" onclick="setFilter(this)">🎵 Entertainment</div>
+      <div class="filter-pill" onclick="setFilter(this)">🙏 Pandit</div>
+      <div class="filter-pill" onclick="setFilter(this)">🌿 Mehendi</div>
+    </div>
+    <div class="vendors-grid" id="vendorsGrid">
+      <!-- Same vendor cards -->
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #FF6B00, #C0392B);">📸<div class="vendor-badge">⚡ Top Rated</div></div>
+        <div class="vendor-info">
+          <div class="vendor-top"><div class="vendor-name">Roshan Wedding Photography</div><div class="rating">⭐ 4.9</div></div>
+          <div class="vendor-category">📷 Photography & Videography</div>
+          <div class="vendor-meta"><span>💰 ₹45,000 onwards</span><span>📍 Banjara Hills</span></div>
+        </div>
+      </div>
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #9C27B0, #E91E63);">💐<div class="vendor-badge">🌸 New</div></div>
+        <div class="vendor-info">
+          <div class="vendor-top"><div class="vendor-name">Lotus Bridal Decor</div><div class="rating">⭐ 4.7</div></div>
+          <div class="vendor-category">🌸 Floral & Wedding Decor</div>
+          <div class="vendor-meta"><span>💰 ₹50,000 onwards</span><span>📍 Jubilee Hills</span></div>
+        </div>
+      </div>
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #2E7D32, #4CAF50);">🍛<div class="vendor-badge">⭐ Best Food</div><div class="vendor-discount">10% OFF</div></div>
+        <div class="vendor-info">
+          <div class="vendor-top"><div class="vendor-name">Saffron Kitchen Catering</div><div class="rating">⭐ 4.8</div></div>
+          <div class="vendor-category">🍽️ Indian Wedding Catering</div>
+          <div class="vendor-meta"><span>💰 ₹700/plate</span><span>📍 Madhapur</span></div>
+        </div>
+      </div>
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #F4A300, #FF6B00);">🎂<div class="vendor-badge">🎉 Birthday Specialist</div></div>
+        <div class="vendor-info">
+          <div class="vendor-top"><div class="vendor-name">Magical Moments Events</div><div class="rating">⭐ 4.9</div></div>
+          <div class="vendor-category">🎂 Kids Birthday & Theme Parties</div>
+          <div class="vendor-meta"><span>💰 ₹20,000 onwards</span><span>📍 Kondapur</span></div>
+        </div>
+      </div>
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #BF360C, #FF7043);">🌿<div class="vendor-badge">✋ Mehendi</div></div>
+        <div class="vendor-info">
+          <div class="vendor-top"><div class="vendor-name">Henna by Fatima</div><div class="rating">⭐ 5.0</div></div>
+          <div class="vendor-category">🌿 Bridal Mehendi Artist</div>
+          <div class="vendor-meta"><span>💰 ₹8,000 onwards</span><span>📍 Old City</span></div>
+        </div>
+      </div>
+      <div class="vendor-card" onclick="openModal('vendorModal')">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #1565C0, #42A5F5);">🎤<div class="vendor-badge">🎙️ Live Performer</div></div>
+        <div class="vendor-info">
+          <div class="vendor-top"><div class="vendor-name">Harmony Music Band</div><div class="rating">⭐ 4.7</div></div>
+          <div class="vendor-category">🎵 Live Music & Brass Band</div>
+          <div class="vendor-meta"><span>💰 ₹35,000/event</span><span>📍 Ameerpet</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- PACKAGES PAGE -->
+<div id="packages" class="page">
+  <div style="padding: 90px 5% 40px; background: linear-gradient(160deg, #FFF8EE, #FFF0D4);">
+    <div class="section-header">
+      <h2>All-Inclusive Event Packages</h2>
+      <div class="divider"></div>
+      <p>Curated packages for every celebration & budget</p>
+    </div>
+  </div>
+  <section class="section bg-white">
+    <h3 style="font-family:'Yeseva One',serif; font-size:1.4rem; margin-bottom:20px; color:var(--deep-red);">💍 Wedding Packages</h3>
+    <div class="packages-grid">
+      <div class="package-card">
+        <div class="package-icon">🌸</div>
+        <div class="package-name">Silver Wedding</div>
+        <div class="package-price">₹1.5L <span>onwards</span></div>
+        <div class="package-desc">Perfect for intimate family weddings with all essential services included.</div>
+        <ul class="package-features">
+          <li>Mandap Decoration</li>
+          <li>Photographer (1 day)</li>
+          <li>Pandit Ji</li>
+          <li>Basic Catering (100 pax)</li>
+          <li>Invitation Cards</li>
+        </ul>
+        <button class="book-btn" onclick="openModal('bookModal')">Book Now</button>
+      </div>
+      <div class="package-card featured">
+        <div class="package-tag">⭐ Most Popular</div>
+        <div class="package-icon">👑</div>
+        <div class="package-name">Gold Wedding</div>
+        <div class="package-price">₹4L <span>onwards</span></div>
+        <div class="package-desc">The complete wedding experience — everything to make your big day unforgettable.</div>
+        <ul class="package-features">
+          <li>Premium Floral Decor</li>
+          <li>Photography + Videography</li>
+          <li>Bridal Makeup</li>
+          <li>Mehendi Artist</li>
+          <li>Grand Catering (300 pax)</li>
+          <li>DJ + Entertainment</li>
+          <li>Baraat Arrangements</li>
+        </ul>
+        <button class="book-btn" onclick="openModal('bookModal')">Book Now</button>
+      </div>
+      <div class="package-card">
+        <div class="package-icon">💎</div>
+        <div class="package-name">Platinum Wedding</div>
+        <div class="package-price">₹10L <span>onwards</span></div>
+        <div class="package-desc">Lavish, luxurious & legendary. For the wedding that sets a new standard.</div>
+        <ul class="package-features">
+          <li>5-Star Venue Coordination</li>
+          <li>Celebrity Photographer</li>
+          <li>Live Band + DJs</li>
+          <li>International Catering</li>
+          <li>Honeymoon Planning</li>
+          <li>Dedicated Event Manager</li>
+          <li>Drone Videography</li>
+          <li>Guest Management App</li>
+        </ul>
+        <button class="book-btn" onclick="openModal('bookModal')">Book Now</button>
+      </div>
+    </div>
+
+    <div class="mandala-divider">· ✦ · ✦ · ✦ ·</div>
+
+    <h3 style="font-family:'Yeseva One',serif; font-size:1.4rem; margin-bottom:20px; color:var(--deep-red);">🎂 Birthday & Other Events</h3>
+    <div class="packages-grid">
+      <div class="package-card">
+        <div class="package-icon">🎈</div>
+        <div class="package-name">Kids Birthday</div>
+        <div class="package-price">₹25,000 <span>onwards</span></div>
+        <div class="package-desc">Magical themed birthday parties for your little prince or princess.</div>
+        <ul class="package-features">
+          <li>Theme Decoration</li>
+          <li>Custom Cake</li>
+          <li>Photographer</li>
+          <li>Entertainment / Games</li>
+          <li>Return Gift Bags</li>
+        </ul>
+        <button class="book-btn" onclick="openModal('bookModal')">Book Now</button>
+      </div>
+      <div class="package-card">
+        <div class="package-icon">🍼</div>
+        <div class="package-name">Cradle Ceremony</div>
+        <div class="package-price">₹35,000 <span>onwards</span></div>
+        <div class="package-desc">A beautiful traditional naming ceremony done the way your elders envisioned.</div>
+        <ul class="package-features">
+          <li>Traditional Mandap Decor</li>
+          <li>Pandit Ji for Namkaran</li>
+          <li>Photographer</li>
+          <li>Catering (Vegetarian)</li>
+          <li>Invitations</li>
+        </ul>
+        <button class="book-btn" onclick="openModal('bookModal')">Book Now</button>
+      </div>
+      <div class="package-card">
+        <div class="package-icon">🥂</div>
+        <div class="package-name">Anniversary Bash</div>
+        <div class="package-price">₹50,000 <span>onwards</span></div>
+        <div class="package-desc">Celebrate your love story with an evening your family will talk about for years.</div>
+        <ul class="package-features">
+          <li>Intimate Venue Setup</li>
+          <li>Floral & LED Decor</li>
+          <li>Photographer</li>
+          <li>Surprise Moments</li>
+          <li>Catering & Cake</li>
+        </ul>
+        <button class="book-btn" onclick="openModal('bookModal')">Book Now</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- EVENTS PAGE -->
+<div id="events" class="page">
+  <div style="padding: 90px 5% 40px; background: linear-gradient(160deg, #FFF8EE, #FFF0D4);">
+    <h2 style="font-family:'Yeseva One',serif; font-size:2rem;">Upcoming Events & Inspiration</h2>
+    <p style="color:var(--muted); margin-top:8px;">Get inspired for your next celebration</p>
+  </div>
+  <section class="section bg-white">
+    <div class="vendors-grid">
+      <div class="vendor-card">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #C0392B, #E74C3C);">💍</div>
+        <div class="vendor-info">
+          <div class="vendor-name" style="font-size:1rem; font-weight:700;">Tamil Brahmin Wedding Guide</div>
+          <div class="vendor-category" style="font-size:0.82rem; color:var(--muted);">Complete guide to rituals, customs & vendors</div>
+          <div class="vendor-meta"><span>📅 Full Guide</span><span>👁️ 12K views</span></div>
+        </div>
+      </div>
+      <div class="vendor-card">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #FF6B00, #F4A300);">🍼</div>
+        <div class="vendor-info">
+          <div class="vendor-name" style="font-size:1rem; font-weight:700;">Namkaran Ceremony Checklist</div>
+          <div class="vendor-category" style="font-size:0.82rem; color:var(--muted);">Everything you need for a traditional cradle ceremony</div>
+          <div class="vendor-meta"><span>📅 Checklist</span><span>👁️ 8K views</span></div>
+        </div>
+      </div>
+      <div class="vendor-card">
+        <div class="vendor-img" style="background: linear-gradient(135deg, #9C27B0, #673AB7);">🎂</div>
+        <div class="vendor-info">
+          <div class="vendor-name" style="font-size:1rem; font-weight:700;">Top 10 Birthday Themes for 2024</div>
+          <div class="vendor-category" style="font-size:0.82rem; color:var(--muted);">Trending themes loved by Indian families</div>
+          <div class="vendor-meta"><span>📅 Trend Report</span><span>👁️ 21K views</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- MODALS -->
+
+<!-- VENDOR DETAIL MODAL -->
+<div class="modal-overlay" id="vendorModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📸 Roshan Wedding Photography</h3>
+      <button class="modal-close" onclick="closeModal('vendorModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:linear-gradient(135deg,#FF6B00,#C0392B); height:160px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:4rem; margin-bottom:20px;">📸</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div>
+          <div style="font-size:0.85rem; color:var(--muted);">📷 Photography & Videography · Banjara Hills</div>
+          <div style="font-size:1.4rem; font-weight:700; color:var(--saffron);">₹45,000 onwards</div>
+        </div>
+        <div class="rating" style="font-size:1rem; padding:8px 14px;">⭐ 4.9 (340)</div>
+      </div>
+      <p style="font-size:0.88rem; color:var(--muted); line-height:1.7; margin-bottom:20px;">Award-winning wedding photographers based in Hyderabad with 10+ years of experience capturing magical moments across India. Specializing in candid photography, drone shots & cinematic videos.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+        <div style="background:var(--ivory); padding:12px; border-radius:10px; font-size:0.82rem;">✅ 340 Weddings Shot</div>
+        <div style="background:var(--ivory); padding:12px; border-radius:10px; font-size:0.82rem;">📍 Pan India Travel</div>
+        <div style="background:var(--ivory); padding:12px; border-radius:10px; font-size:0.82rem;">🎬 4K Drone Available</div>
+        <div style="background:var(--ivory); padding:12px; border-radius:10px; font-size:0.82rem;">📅 7-Day Delivery</div>
+      </div>
+      <button class="submit-btn" onclick="closeModal('vendorModal'); openModal('bookModal')">📅 Check Availability & Book</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>🎊 Plan Your Event</h3>
+      <button class="modal-close" onclick="closeModal('bookModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input class="form-input" type="text" placeholder="Ramesh Kumar">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input class="form-input" type="tel" placeholder="+91 98765 43210">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" placeholder="you@email.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Event Type</label>
+        <select class="form-input">
+          <option>💍 Wedding / Shaadi</option>
+          <option>🍼 Cradle Ceremony</option>
+          <option>🎂 Birthday Party</option>
+          <option>💒 Engagement</option>
+          <option>🪔 Festival Celebration</option>
+          <option>🥂 Anniversary</option>
+          <option>🧵 Thread Ceremony</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Event Date</label>
+          <input class="form-input" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Guest Count</label>
+          <input class="form-input" type="number" placeholder="200">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">City</label>
+        <select class="form-input">
+          <option>Hyderabad</option><option>Mumbai</option><option>Delhi NCR</option>
+          <option>Bangalore</option><option>Chennai</option><option>Pune</option>
+          <option>Jaipur</option><option>Kochi</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Budget Range</label>
+        <select class="form-input">
+          <option>Under ₹1 Lakh</option>
+          <option>₹1–3 Lakhs</option>
+          <option>₹3–7 Lakhs</option>
+          <option>₹7–15 Lakhs</option>
+          <option>₹15 Lakhs+</option>
+        </select>
+      </div>
+      <button class="submit-btn" onclick="submitBooking()">✨ Get Free Consultation</button>
+      <p style="text-align:center; font-size:0.78rem; color:var(--muted); margin-top:10px;">Our event expert will call you within 2 hours!</p>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>🪔 Welcome to Utsav</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center; margin-bottom:20px;">
+        <div style="font-size:3rem; margin-bottom:8px;">🎊</div>
+        <p style="color:var(--muted); font-size:0.9rem;">Sign in to manage your bookings & wishlist</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input class="form-input" type="tel" placeholder="+91 98765 43210">
+      </div>
+      <button class="submit-btn">Send OTP via WhatsApp</button>
+      <div style="text-align:center; margin:16px 0; color:var(--muted); font-size:0.85rem;">— or continue with —</div>
+      <button style="width:100%; padding:12px; border-radius:12px; border:2px solid #E8D5B7; background:white; font-size:0.9rem; font-weight:600; cursor:pointer; font-family:'Poppins',sans-serif;">🌐 Continue with Google</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION MODAL -->
+<div class="modal-overlay" id="locationModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📍 Choose Your City</h3>
+      <button class="modal-close" onclick="closeModal('locationModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input class="form-input" type="text" placeholder="Search city..." style="margin-bottom:16px;">
+      <div class="cities-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="city-card" onclick="setCity('Hyderabad')"><div class="city-emoji">🏙️</div><div class="city-name">Hyderabad</div></div>
+        <div class="city-card" onclick="setCity('Mumbai')"><div class="city-emoji">🌊</div><div class="city-name">Mumbai</div></div>
+        <div class="city-card" onclick="setCity('Delhi')"><div class="city-emoji">🏛️</div><div class="city-name">Delhi NCR</div></div>
+        <div class="city-card" onclick="setCity('Bangalore')"><div class="city-emoji">🌿</div><div class="city-name">Bangalore</div></div>
+        <div class="city-card" onclick="setCity('Chennai')"><div class="city-emoji">🎨</div><div class="city-name">Chennai</div></div>
+        <div class="city-card" onclick="setCity('Pune')"><div class="city-emoji">🌸</div><div class="city-name">Pune</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART FAB -->
+<button class="cart-fab" onclick="openModal('bookModal')">
+  🎊
+  <div class="cart-badge">3</div>
+</button>
+
+<!-- BOTTOM NAV (Mobile) -->
+<nav class="bottom-nav">
+  <div class="bnav-item active" onclick="showSection('home')"><div class="bnav-icon">🏠</div>Home</div>
+  <div class="bnav-item" onclick="showSection('events')"><div class="bnav-icon">🎉</div>Events</div>
+  <div class="bnav-item" onclick="showSection('vendors')"><div class="bnav-icon">🛍️</div>Vendors</div>
+  <div class="bnav-item" onclick="showSection('packages')"><div class="bnav-icon">📦</div>Packages</div>
+  <div class="bnav-item" onclick="openModal('loginModal')"><div class="bnav-icon">👤</div>Profile</div>
+</nav>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h2>🪔 Utsav.in</h2>
+      <p>India's most trusted event management platform — bringing every celebration to life with love, tradition & excellence.</p>
+      <div class="social-links">
+        <button class="social-btn">📘</button>
+        <button class="social-btn">📸</button>
+        <button class="social-btn">🐦</button>
+        <button class="social-btn">▶️</button>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Events</h4>
+      <ul class="footer-links">
+        <li><a href="#">Weddings</a></li>
+        <li><a href="#">Cradle Ceremony</a></li>
+        <li><a href="#">Birthdays</a></li>
+        <li><a href="#">Engagements</a></li>
+        <li><a href="#">Festivals</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Vendors</h4>
+      <ul class="footer-links">
+        <li><a href="#">Photographers</a></li>
+        <li><a href="#">Caterers</a></li>
+        <li><a href="#">Decorators</a></li>
+        <li><a href="#">Makeup Artists</a></li>
+        <li><a href="#">List Your Business</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Blog & Tips</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2024 Utsav Technologies Pvt. Ltd. · Made with ❤️ in India · All rights reserved.
+  </div>
+</footer>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+
+    // Update bottom nav
+    document.querySelectorAll('.bnav-item').forEach((item, i) => {
+      item.classList.remove('active');
+    });
+  }
+
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Close modal on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+
+  function setFilter(el) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function filterVendors(type) {
+    showSection('vendors');
+  }
+
+  function setCity(city) {
+    document.querySelector('.location-pill').innerHTML = `📍 ${city} ▾`;
+    closeModal('locationModal');
+  }
+
+  function submitBooking() {
+  const data = {
+    name: document.querySelector('input[type="text"]').value,
+    phone: document.querySelector('input[type="tel"]').value,
+    email: document.querySelector('input[type="email"]').value,
+    eventType: document.querySelector('select').value,
+    eventDate: document.querySelector('input[type="date"]').value,
+    guestCount: document.querySelector('input[type="number"]').value,
+    city: document.querySelectorAll('select')[1].value,
+    budget: document.querySelectorAll('select')[2].value
+  };
+
+  fetch("http://localhost:3000/api/booking", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert("✅ Booking saved!");
+  })
+  .catch(err => {
+    console.error(err);
+    alert("❌ Error connecting to backend");
+  });
+}
+</script>
+</body>
+</html>
