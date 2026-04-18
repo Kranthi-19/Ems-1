@@ -1508,32 +1508,48 @@
     closeModal('locationModal');
   }
 
-  function submitBooking() {
-  const data = {
-    name: document.querySelector('input[type="text"]').value,
-    phone: document.querySelector('input[type="tel"]').value,
-    email: document.querySelector('input[type="email"]').value,
-    eventType: document.querySelector('select').value,
-    eventDate: document.querySelector('input[type="date"]').value,
-    guestCount: document.querySelector('input[type="number"]').value,
-    city: document.querySelectorAll('select')[1].value,
-    budget: document.querySelectorAll('select')[2].value
-  };
+ function submitBooking() {
+  const btn = document.querySelector('.submit-btn');
+  btn.innerHTML = '⏳ Connecting...';
+  btn.disabled = true;
 
-  fetch("http://localhost:3000/api/booking", {
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
+  const eventType = document.getElementById("eventType").value;
+  const eventDate = document.getElementById("eventDate").value;
+  const guestCount = document.getElementById("guestCount").value;
+  const city = document.getElementById("city").value;
+  const budget = document.getElementById("budget").value;
+
+  fetch("https://ems-1-4.onrender.com/api/booking", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, phone, email, eventType, eventDate, guestCount, city, budget })
   })
   .then(res => res.json())
   .then(data => {
-    alert("✅ Booking saved!");
+    btn.innerHTML = '🚀 Submit Booking';
+    btn.disabled = false;
+    if (data.success) {
+      closeModal('bookModal');
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+        background:green; color:white; padding:14px 28px;
+        border-radius:12px; font-weight:600; z-index:9999;
+      `;
+      toast.innerHTML = '🎊 Booking saved successfully!';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    } else {
+      alert("❌ Error: " + data.error);
+    }
   })
   .catch(err => {
-    console.error(err);
-    alert("❌ Error connecting to backend");
+    btn.innerHTML = '🚀 Submit Booking';
+    btn.disabled = false;
+    alert("❌ Server is waking up, please wait 30 seconds and try again!");
   });
 }
 </script>
