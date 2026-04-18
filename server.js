@@ -6,21 +6,16 @@ const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-console.log("📦 DATABASE_URL:", process.env.DATABASE_URL ? "SET ✅" : "NOT SET ❌");
+console.log("DB URL set:", !!process.env.DATABASE_URL);
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: false  // ← Change to false for Supabase session pooler
 });
 
 pool.connect((err, client, release) => {
-  if (err) {
-    console.error("❌ DB CONNECTION FAILED:", err.message);
-  } else {
-    console.log("✅ DB CONNECTED SUCCESSFULLY");
-    release();
-    client && release();
-  }
+  if (err) console.error("❌ DB FAILED:", err.message);
+  else { console.log("✅ DB CONNECTED"); release(); }
 });
 
 app.get('/', (req, res) => res.send('🚀 Running!'));
@@ -35,7 +30,6 @@ app.get('/api/test-db', async (req, res) => {
 });
 
 app.post('/api/booking', async (req, res) => {
-  console.log("📩 Body received:", req.body);
   const { name, phone, email, eventType, eventDate, guestCount, city, budget } = req.body;
   try {
     await pool.query(`
@@ -52,10 +46,10 @@ app.post('/api/booking', async (req, res) => {
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
       [name, phone, email, eventType, eventDate, guestCount, city, budget]
     );
-    console.log("✅ Booking inserted!");
+    console.log("✅ Booking saved!");
     res.json({ success: true });
   } catch (err) {
-    console.error("❌ Booking error:", err.message);
+    console.error("❌ Error:", err.message);
     res.status(500).json({ success: false, error: err.message });
   }
 });
