@@ -1,0 +1,16 @@
+{
+    "name": "ems-backend",
+    "version": "1.0.0",
+    "description": "Event Management System Backend",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "author": "Akhil",
+    "license": "ISC",
+    "dependencies": {
+      "cors": "^2.8.6",
+      "express": "^5.2.1",
+      "pg": "^8.20.0"
+    }
+  }
