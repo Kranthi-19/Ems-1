@@ -1287,6 +1287,7 @@
 </div>
 
 <!-- BOOKING MODAL -->
+<!-- BOOKING MODAL -->
 <div class="modal-overlay" id="bookModal">
   <div class="modal">
     <div class="modal-header">
@@ -1296,56 +1297,62 @@
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">Your Name</label>
-        <input class="form-input" type="text" placeholder="Ramesh Kumar">
+        <input id="name" class="form-input" type="text" placeholder="Ramesh Kumar">
       </div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Phone Number</label>
-          <input class="form-input" type="tel" placeholder="+91 98765 43210">
+          <input id="phone" class="form-input" type="tel" placeholder="+91 98765 43210">
         </div>
         <div class="form-group">
           <label class="form-label">Email</label>
-          <input class="form-input" type="email" placeholder="you@email.com">
+          <input id="email" class="form-input" type="email" placeholder="you@email.com">
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Event Type</label>
-        <select class="form-input">
-          <option>💍 Wedding / Shaadi</option>
-          <option>🍼 Cradle Ceremony</option>
-          <option>🎂 Birthday Party</option>
-          <option>💒 Engagement</option>
-          <option>🪔 Festival Celebration</option>
-          <option>🥂 Anniversary</option>
-          <option>🧵 Thread Ceremony</option>
+        <select id="eventType" class="form-input">
+          <option value="Wedding">💍 Wedding / Shaadi</option>
+          <option value="Cradle">🍼 Cradle Ceremony</option>
+          <option value="Birthday">🎂 Birthday Party</option>
+          <option value="Engagement">💒 Engagement</option>
+          <option value="Festival">🪔 Festival Celebration</option>
+          <option value="Anniversary">🥂 Anniversary</option>
+          <option value="Thread">🧵 Thread Ceremony</option>
         </select>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Event Date</label>
-          <input class="form-input" type="date">
+          <input id="eventDate" class="form-input" type="date">
         </div>
         <div class="form-group">
           <label class="form-label">Guest Count</label>
-          <input class="form-input" type="number" placeholder="200">
+          <input id="guestCount" class="form-input" type="number" placeholder="200">
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">City</label>
-        <select class="form-input">
-          <option>Hyderabad</option><option>Mumbai</option><option>Delhi NCR</option>
-          <option>Bangalore</option><option>Chennai</option><option>Pune</option>
-          <option>Jaipur</option><option>Kochi</option><option>Other</option>
+        <select id="city" class="form-input">
+          <option value="Hyderabad">Hyderabad</option>
+          <option value="Mumbai">Mumbai</option>
+          <option value="Delhi">Delhi NCR</option>
+          <option value="Bangalore">Bangalore</option>
+          <option value="Chennai">Chennai</option>
+          <option value="Pune">Pune</option>
+          <option value="Jaipur">Jaipur</option>
+          <option value="Kochi">Kochi</option>
+          <option value="Other">Other</option>
         </select>
       </div>
       <div class="form-group">
         <label class="form-label">Budget Range</label>
-        <select class="form-input">
-          <option>Under ₹1 Lakh</option>
-          <option>₹1–3 Lakhs</option>
-          <option>₹3–7 Lakhs</option>
-          <option>₹7–15 Lakhs</option>
-          <option>₹15 Lakhs+</option>
+        <select id="budget" class="form-input">
+          <option value="Under 1L">Under ₹1 Lakh</option>
+          <option value="1-3L">₹1–3 Lakhs</option>
+          <option value="3-7L">₹3–7 Lakhs</option>
+          <option value="7-15L">₹7–15 Lakhs</option>
+          <option value="15L+">₹15 Lakhs+</option>
         </select>
       </div>
       <button class="submit-btn" onclick="submitBooking()">✨ Get Free Consultation</button>
@@ -1353,7 +1360,6 @@
     </div>
   </div>
 </div>
-
 <!-- LOGIN MODAL -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal">
