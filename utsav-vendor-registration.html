@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utsav Partner — Vendor Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--sf:#E8560A;--dr:#B03020;--mg:#E09800;--iv:#FFF8EE;--dk:#1A0A00;--mut:#7A5F37;--grn:#1E9050;--red:#C0302A;--bdr:#E8D5B7;--bg:#FFF8EE;--card:#FFFFFF}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--dk);min-height:100vh}
+/* NAV */
+nav{background:#1A0A00;padding:0 5%;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'Yeseva One',serif;font-size:1.4rem;color:#FF8C3A}
+.nav-logo span{color:#C9A87C;font-size:0.85rem;margin-left:8px}
+.nav-help{color:#C9A87C;font-size:0.82rem;cursor:pointer}
+/* HERO STRIP */
+.hero-strip{background:linear-gradient(135deg,#1A0A00,#3D1500);padding:32px 5%;text-align:center}
+.hero-strip h1{font-family:'Yeseva One',serif;color:#FF8C3A;font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:6px}
+.hero-strip p{color:#C9A87C;font-size:0.88rem}
+.benefits{display:flex;justify-content:center;gap:32px;margin-top:18px;flex-wrap:wrap}
+.benefit{display:flex;align-items:center;gap:8px;color:#C9A87C;font-size:0.78rem}
+.benefit-ic{width:28px;height:28px;border-radius:50%;background:rgba(255,140,58,0.15);border:1px solid rgba(255,140,58,0.3);display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0}
+/* STEPS PROGRESS */
+.progress-wrap{background:white;border-bottom:2px solid var(--bdr);padding:16px 5%;position:sticky;top:58px;z-index:90}
+.steps-track{display:flex;align-items:center;max-width:860px;margin:0 auto}
+.st-item{display:flex;flex-direction:column;align-items:center;flex:1}
+.st-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--bdr);background:white;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:600;color:#aaa;transition:all 0.3s;position:relative;z-index:2}
+.st-dot.done{background:var(--grn);border-color:var(--grn);color:white}
+.st-dot.active{background:var(--sf);border-color:var(--sf);color:white}
+.st-lbl{font-size:0.65rem;color:#aaa;margin-top:4px;white-space:nowrap}
+.st-lbl.active{color:var(--sf);font-weight:600}
+.st-lbl.done{color:var(--grn)}
+.st-line{flex:1;height:2px;background:var(--bdr);margin-bottom:18px;transition:background 0.3s}
+.st-line.done{background:var(--grn)}
+/* MAIN */
+.main-wrap{max-width:860px;margin:0 auto;padding:28px 5% 60px}
+.form-card{background:white;border-radius:16px;border:1px solid var(--bdr);overflow:hidden;margin-bottom:20px}
+.fc-head{padding:20px 24px 16px;border-bottom:1px solid var(--bdr)}
+.fc-title{font-family:'Yeseva One',serif;font-size:1.25rem;color:var(--dk);margin-bottom:3px}
+.fc-sub{font-size:0.82rem;color:var(--mut)}
+.fc-body{padding:24px}
+/* FORM ELEMENTS */
+.fg{margin-bottom:16px}
+.fl{display:block;font-size:0.78rem;font-weight:600;color:var(--dk);margin-bottom:5px}
+.req{color:var(--red);margin-left:2px}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=password],input[type=url],input[type=time],input[type=date],select,textarea{width:100%;padding:10px 14px;border:1.5px solid var(--bdr);border-radius:10px;font-size:0.88rem;font-family:'Poppins',sans-serif;background:var(--iv);color:var(--dk);outline:none;transition:border 0.2s,background 0.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--sf);background:white}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+/* CATEGORY GRID */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.cat-card{border:1.5px solid var(--bdr);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.2s;background:white}
+.cat-card:hover{border-color:var(--sf);transform:translateY(-2px)}
+.cat-card.sel{border-color:var(--sf);background:#FFF0E6;box-shadow:0 0 0 3px rgba(232,86,10,0.1)}
+.cat-ic{font-size:1.6rem;margin-bottom:6px}
+.cat-name{font-size:0.78rem;font-weight:600;color:var(--dk)}
+.cat-card.sel .cat-name{color:var(--dr)}
+/* EVENT CHECKLIST */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:16px}
+.ck-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1.5px solid var(--bdr);border-radius:10px;cursor:pointer;font-size:0.82rem;color:var(--dk);transition:all 0.15s;background:white}
+.ck-item:hover{border-color:var(--sf)}
+.ck-item.sel{border-color:var(--grn);background:#EBF8F0}
+.ck-box{width:16px;height:16px;border-radius:4px;border:2px solid var(--bdr);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;transition:all 0.15s}
+.ck-item.sel .ck-box{background:var(--grn);border-color:var(--grn);color:white}
+/* SERVICE ROWS */
+.svc-hdr{display:grid;grid-template-columns:1fr 120px 110px 36px;gap:10px;padding:0 0 6px;margin-bottom:4px;border-bottom:1px solid var(--bdr)}
+.svc-hdr span{font-size:0.7rem;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.svc-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.svc-row{background:var(--iv);border:1px solid var(--bdr);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:1fr 120px 110px 36px;gap:10px;align-items:center}
+.svc-row input,.svc-row select{padding:7px 10px;font-size:0.82rem}
+.del-btn{width:28px;height:28px;border-radius:50%;background:white;border:1px solid var(--bdr);color:#aaa;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all 0.15s;font-family:'Poppins',sans-serif}
+.del-btn:hover{border-color:var(--red);color:var(--red)}
+.add-svc-btn{width:100%;border:1.5px dashed var(--bdr);background:none;border-radius:10px;padding:10px;font-size:0.82rem;color:var(--mut);cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.15s}
+.add-svc-btn:hover{border-color:var(--sf);color:var(--sf)}
+/* DAYS PILLS */
+.days-wrap{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.day-pill{padding:7px 16px;border-radius:20px;border:1.5px solid var(--bdr);font-size:0.8rem;cursor:pointer;color:var(--mut);transition:all 0.15s;font-weight:500}
+.day-pill.sel{background:#1A0A00;border-color:#1A0A00;color:white}
+/* CITIES */
+.city-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;min-height:28px}
+.city-tag{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:#1A0A00;color:#C9A87C;font-size:0.75rem}
+.city-x{cursor:pointer;color:#888;font-size:0.85rem;line-height:1}
+.city-x:hover{color:var(--red)}
+/* DOC UPLOAD */
+.doc-upload{border:1.5px dashed var(--bdr);border-radius:12px;padding:18px;text-align:center;cursor:pointer;margin-bottom:10px;transition:all 0.2s}
+.doc-upload:hover{border-color:var(--sf);background:var(--iv)}
+.du-ic{font-size:1.5rem;margin-bottom:6px}
+.du-lbl{font-size:0.85rem;font-weight:600;color:var(--dk);margin-bottom:2px}
+.du-sub{font-size:0.72rem;color:var(--mut)}
+.doc-done{border:1.5px solid var(--grn);background:#EBF8F0;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:0.82rem;color:var(--grn);font-weight:500}
+/* PLAN CARDS */
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.plan-card{border:1.5px solid var(--bdr);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s;position:relative;background:white}
+.plan-card:hover{border-color:var(--sf);transform:translateY(-2px)}
+.plan-card.sel{border:2px solid var(--sf);box-shadow:0 0 0 3px rgba(232,86,10,0.1)}
+.plan-popular{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--sf);color:white;font-size:0.65rem;font-weight:700;padding:2px 12px;border-radius:10px;white-space:nowrap}
+.plan-name{font-family:'Yeseva One',serif;font-size:1rem;margin-bottom:4px}
+.plan-price{font-size:1.3rem;font-weight:700;color:var(--sf);margin-bottom:6px}
+.plan-price span{font-size:0.75rem;color:var(--mut);font-weight:400}
+.plan-features{list-style:none;margin-top:10px}
+.plan-features li{font-size:0.75rem;padding:3px 0;color:var(--mut);display:flex;align-items:center;gap:6px}
+.plan-features li::before{content:'✓';color:var(--grn);font-weight:700;flex-shrink:0}
+/* INFO BOXES */
+.info-box{background:#EBF3FC;border:1px solid #B5D4F4;border-radius:10px;padding:12px 14px;font-size:0.8rem;color:#0C447C;margin-bottom:16px;line-height:1.6}
+.warn-box{background:#FFF3CD;border:1px solid #FBBF24;border-radius:10px;padding:12px 14px;font-size:0.8rem;color:#633806;margin-bottom:16px;line-height:1.6}
+/* REVIEW */
+.rv-block{border:1px solid var(--bdr);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.rv-head{background:var(--iv);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bdr)}
+.rv-head h4{font-size:0.85rem;font-weight:600;color:var(--dk)}
+.rv-edit{font-size:0.75rem;color:var(--sf);cursor:pointer;font-weight:600}
+.rv-body{padding:14px 16px}
+.rv-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--iv);font-size:0.82rem}
+.rv-row:last-child{border-bottom:none}
+.rv-lbl{color:var(--mut)}
+.rv-val{font-weight:600;color:var(--dk);text-align:right;max-width:55%}
+/* NAVIGATION BUTTONS */
+.nav-btns{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.btn-back{padding:11px 24px;border-radius:10px;border:1.5px solid var(--bdr);background:white;font-size:0.88rem;font-weight:600;cursor:pointer;color:var(--mut);font-family:'Poppins',sans-serif;transition:all 0.2s}
+.btn-back:hover{border-color:var(--sf);color:var(--sf)}
+.btn-next{padding:11px 28px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--sf),var(--dr));color:white;font-size:0.88rem;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.2s}
+.btn-next:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,86,10,0.35)}
+.step-hint{font-size:0.78rem;color:var(--mut)}
+/* PAGE VISIBILITY */
+.reg-step{display:none}
+.reg-step.act{display:block}
+/* SUCCESS */
+.success-wrap{text-align:center;padding:40px 20px}
+.tick-circle{width:72px;height:72px;border-radius:50%;background:var(--grn);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;color:white}
+.succ-title{font-family:'Yeseva One',serif;font-size:1.8rem;color:var(--dk);margin-bottom:8px}
+.succ-sub{font-size:0.92rem;color:var(--mut);line-height:1.7;margin-bottom:28px}
+.what-next{background:var(--iv);border-radius:14px;padding:20px;text-align:left;margin-bottom:24px;border:1px solid var(--bdr)}
+.wn-title{font-weight:700;font-size:0.88rem;margin-bottom:14px}
+.wn-item{display:flex;gap:12px;margin-bottom:12px;font-size:0.84rem;color:var(--mut);align-items:flex-start}
+.wn-num{width:24px;height:24px;border-radius:50%;background:var(--sf);color:white;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.btn-dashboard{display:inline-block;padding:13px 32px;background:#1A0A00;color:#FF8C3A;border-radius:12px;font-weight:700;font-size:0.92rem;cursor:pointer;border:none;font-family:'Poppins',sans-serif;transition:all 0.2s}
+.btn-dashboard:hover{background:#2D1500;transform:translateY(-1px)}
+/* RESPONSIVE */
+@media(max-width:600px){
+  .row2,.row3{grid-template-columns:1fr}
+  .plan-grid{grid-template-columns:1fr}
+  .svc-row,.svc-hdr{grid-template-columns:1fr 100px 36px;}.svc-row select,.svc-hdr span:nth-child(3){display:none}
+  .benefits{gap:14px}
+  .cat-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">🪔 Utsav Partner <span>Vendor Portal</span></div>
+  <div class="nav-help">Need help? 📞 1800-XXX-UTSAV</div>
+</nav>
+
+<div class="hero-strip">
+  <h1>Join Utsav as a Vendor Partner</h1>
+  <p>India's #1 event management platform — grow your business with 2L+ families</p>
+  <div class="benefits">
+    <div class="benefit"><div class="benefit-ic">🆓</div>Free to join — no setup cost</div>
+    <div class="benefit"><div class="benefit-ic">📅</div>Get bookings instantly</div>
+    <div class="benefit"><div class="benefit-ic">💰</div>Payouts every 25th</div>
+    <div class="benefit"><div class="benefit-ic">🛡️</div>Verified badge for trust</div>
+    <div class="benefit"><div class="benefit-ic">📊</div>Dashboard & analytics</div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="steps-track" id="stepstrack"></div>
+</div>
+
+<div class="main-wrap">
+
+  <!-- ═══ STEP 1: ACCOUNT ═══ -->
+  <div class="reg-step act" id="step-1">
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">Create your account</div>
+        <div class="fc-sub">Basic details to get started — takes less than 2 minutes</div>
+      </div>
+      <div class="fc-body">
+        <div class="row2">
+          <div class="fg"><label class="fl">Full name <span class="req">*</span></label><input id="s1_name" type="text" placeholder="Roshan Kumar"></div>
+          <div class="fg"><label class="fl">Phone number <span class="req">*</span></label><input id="s1_phone" type="tel" placeholder="+91 98765 43210"></div>
+        </div>
+        <div class="fg"><label class="fl">Email address <span class="req">*</span></label><input id="s1_email" type="email" placeholder="you@email.com"></div>
+        <div class="row2">
+          <div class="fg"><label class="fl">Password <span class="req">*</span></label><input type="password" placeholder="Minimum 8 characters"></div>
+          <div class="fg"><label class="fl">Confirm password <span class="req">*</span></label><input type="password" placeholder="Repeat password"></div>
+        </div>
+        <div class="fg"><label class="fl">How did you hear about us?</label>
+          <select><option value="">Select source</option><option>Google Search</option><option>Instagram / Facebook</option><option>Friend or colleague</option><option>Existing Utsav customer</option><option>Event expo or fair</option><option>WhatsApp</option><option>Other</option></select>
+        </div>
+        <div class="info-box">🔒 By registering, you agree to Utsav's <strong>vendor terms of service</strong> and <strong>privacy policy</strong>. Your information is fully secure and used only for account verification and payouts.</div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <div class="step-hint">Step 1 of 8</div>
+      <button class="btn-next" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 2: BUSINESS ═══ -->
+  <div class="reg-step" id="step-2">
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">Business details</div>
+        <div class="fc-sub">Tell us about your business so customers can discover and trust you</div>
+      </div>
+      <div class="fc-body">
+        <div class="fg"><label class="fl">Business / brand name <span class="req">*</span></label><input id="s2_bname" type="text" placeholder="e.g. Roshan Wedding Photography"></div>
+        <div class="row2">
+          <div class="fg"><label class="fl">Years in business <span class="req">*</span></label>
+            <select><option value="">Select</option><option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select>
+          </div>
+          <div class="fg"><label class="fl">Team size</label>
+            <select><option value="">Select</option><option>Solo (just me)</option><option>2–5 people</option><option>6–15 people</option><option>15+ people</option></select>
+          </div>
+        </div>
+        <div class="fg"><label class="fl">Business description <span class="req">*</span></label>
+          <textarea rows="4" placeholder="Describe your services, your style, and what makes you unique. This appears on your public profile and helps customers choose you..."></textarea>
+        </div>
+        <div class="row2">
+          <div class="fg"><label class="fl">GST number <span style="font-size:0.72rem;color:var(--mut)">(optional)</span></label><input type="text" placeholder="For GST invoices"></div>
+          <div class="fg"><label class="fl">Website / Portfolio URL</label><input type="url" placeholder="https://yourwebsite.com"></div>
+        </div>
+        <div class="row2">
+          <div class="fg"><label class="fl">Instagram handle</label><input type="text" placeholder="@yourusername"></div>
+          <div class="fg"><label class="fl">Facebook page URL</label><input type="url" placeholder="https://facebook.com/yourpage"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goBack()">← Back</button>
+      <div class="step-hint">Step 2 of 8</div>
+      <button class="btn-next" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 3: CATEGORY ═══ -->
+  <div class="reg-step" id="step-3">
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">What services do you offer?</div>
+        <div class="fc-sub">Select your primary service category — add more details in the next step</div>
+      </div>
+      <div class="fc-body">
+        <label class="fl" style="margin-bottom:10px">Primary category <span class="req">*</span></label>
+        <div class="cat-grid" id="catgrid">
+          <div class="cat-card sel" onclick="selCat(this,'Photography')"><div class="cat-ic">📸</div><div class="cat-name">Photography</div></div>
+          <div class="cat-card" onclick="selCat(this,'Videography')"><div class="cat-ic">🎬</div><div class="cat-name">Videography</div></div>
+          <div class="cat-card" onclick="selCat(this,'Decoration')"><div class="cat-ic">🌸</div><div class="cat-name">Decoration</div></div>
+          <div class="cat-card" onclick="selCat(this,'Catering')"><div class="cat-ic">🍽️</div><div class="cat-name">Catering</div></div>
+          <div class="cat-card" onclick="selCat(this,'Makeup')"><div class="cat-ic">💄</div><div class="cat-name">Bridal Makeup</div></div>
+          <div class="cat-card" onclick="selCat(this,'Mehendi')"><div class="cat-ic">🌿</div><div class="cat-name">Mehendi</div></div>
+          <div class="cat-card" onclick="selCat(this,'Pandit')"><div class="cat-ic">🙏</div><div class="cat-name">Pandit Ji</div></div>
+          <div class="cat-card" onclick="selCat(this,'DJ')"><div class="cat-ic">🎵</div><div class="cat-name">DJ / Music</div></div>
+          <div class="cat-card" onclick="selCat(this,'Band')"><div class="cat-ic">🎺</div><div class="cat-name">Brass Band</div></div>
+          <div class="cat-card" onclick="selCat(this,'Venue')"><div class="cat-ic">🏛️</div><div class="cat-name">Venue / Hall</div></div>
+          <div class="cat-card" onclick="selCat(this,'Tent House')"><div class="cat-ic">⛺</div><div class="cat-name">Tent House</div></div>
+          <div class="cat-card" onclick="selCat(this,'Wedding Cars')"><div class="cat-ic">🚗</div><div class="cat-name">Wedding Cars</div></div>
+          <div class="cat-card" onclick="selCat(this,'Catering')"><div class="cat-ic">🎂</div><div class="cat-name">Cake Artist</div></div>
+          <div class="cat-card" onclick="selCat(this,'Choreography')"><div class="cat-ic">💃</div><div class="cat-name">Choreography</div></div>
+          <div class="cat-card" onclick="selCat(this,'Invitation Cards')"><div class="cat-ic">✉️</div><div class="cat-name">Invitations</div></div>
+          <div class="cat-card" onclick="selCat(this,'Other')"><div class="cat-ic">➕</div><div class="cat-name">Other</div></div>
+        </div>
+        <label class="fl" style="margin-bottom:10px">Events you cater to <span class="req">*</span></label>
+        <div class="ev-grid" id="evcklist">
+          <div class="ck-item sel" onclick="togCk(this)"><div class="ck-box">✓</div>💍 Wedding / Shaadi</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>🍼 Cradle Ceremony</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>🎂 Birthday Party</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>💒 Engagement</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>🌿 Haldi / Mehendi</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>🥂 Anniversary</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>🧵 Thread Ceremony</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>🏢 Corporate Events</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>🪔 Festivals / Navratri</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>👶 Baby Shower</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>🎓 Graduation Party</div>
+          <div class="ck-item" onclick="togCk(this)"><div class="ck-box"></div>🕌 Religious Ceremony</div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goBack()">← Back</button>
+      <div class="step-hint">Step 3 of 8</div>
+      <button class="btn-next" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 4: SERVICES & PRICING ═══ -->
+  <div class="reg-step" id="step-4">
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">Your services & pricing</div>
+        <div class="fc-sub">List the packages you offer with starting prices — customers will see these on your profile</div>
+      </div>
+      <div class="fc-body">
+        <div class="svc-hdr"><span>Service / Package name</span><span>Starting price (₹)</span><span>Priced per</span><span></span></div>
+        <div class="svc-rows" id="svcrows">
+          <div class="svc-row">
+            <input type="text" placeholder="e.g. Basic Wedding Photography" value="Basic Wedding Photography">
+            <input type="number" placeholder="45000" value="45000">
+            <select><option>per event</option><option>per day</option><option>per hour</option><option>per plate</option><option>per person</option><option>per session</option></select>
+            <button class="del-btn" onclick="delSvc(this)" title="Remove">✕</button>
+          </div>
+          <div class="svc-row">
+            <input type="text" placeholder="e.g. Cinematic Wedding Film" value="Cinematic Wedding Film">
+            <input type="number" placeholder="75000" value="75000">
+            <select><option>per event</option><option>per day</option><option>per hour</option><option>per plate</option><option>per person</option><option>per session</option></select>
+            <button class="del-btn" onclick="delSvc(this)" title="Remove">✕</button>
+          </div>
+        </div>
+        <button class="add-svc-btn" onclick="addSvc()">+ Add another service / package</button>
+        <div style="margin-top:18px" class="row2">
+          <div class="fg"><label class="fl">Minimum booking amount</label><input type="number" placeholder="e.g. 20000 (optional)"></div>
+          <div class="fg"><label class="fl">Advance payment required</label>
+            <select><option>25% advance at booking</option><option>50% advance at booking</option><option>Full payment upfront</option><option>No advance required</option><option>Custom (mention in notes)</option></select>
+          </div>
+        </div>
+        <div class="fg"><label class="fl">Cancellation policy</label>
+          <select><option>Flexible — full refund up to 7 days before event</option><option>Moderate — 50% refund up to 14 days before event</option><option>Strict — no refund after confirmation</option><option>Custom policy (specify below)</option></select>
+        </div>
+        <div class="fg"><label class="fl">Special notes / inclusions</label>
+          <textarea rows="3" placeholder="Any special inclusions, equipment, travel charges, or notes customers should know about..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goBack()">← Back</button>
+      <div class="step-hint">Step 4 of 8</div>
+      <button class="btn-next" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 5: LOCATION ═══ -->
+  <div class="reg-step" id="step-5">
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">Location & availability</div>
+        <div class="fc-sub">Where you're based and when customers can book you</div>
+      </div>
+      <div class="fc-body">
+        <div class="row2">
+          <div class="fg"><label class="fl">Primary city <span class="req">*</span></label>
+            <select id="s5_city"><option value="">Select city</option><option>Hyderabad</option><option>Mumbai</option><option>Delhi NCR</option><option>Bangalore</option><option>Chennai</option><option>Pune</option><option>Jaipur</option><option>Kochi</option><option>Kolkata</option><option>Ahmedabad</option><option>Surat</option><option>Lucknow</option><option>Chandigarh</option><option>Coimbatore</option><option>Visakhapatnam</option></select>
+          </div>
+          <div class="fg"><label class="fl">Area / locality <span class="req">*</span></label><input type="text" placeholder="e.g. Banjara Hills, Kondapur"></div>
+        </div>
+        <div class="fg"><label class="fl">Full address</label><input type="text" placeholder="Shop / studio address (optional — shown to confirmed bookings only)"></div>
+        <div class="fg"><label class="fl">Will you travel for events? <span class="req">*</span></label>
+          <select><option>Yes — Pan India (I travel anywhere)</option><option>Yes — within my state</option><option>Yes — within 200km radius</option><option>Yes — within 100km radius</option><option>No — within my city only</option></select>
+        </div>
+        <div class="fg">
+          <label class="fl">Other cities you serve <span style="font-size:0.72rem;color:var(--mut)">(type city name + Enter)</span></label>
+          <div class="city-tags" id="citylist">
+            <div class="city-tag">Vijayawada <span class="city-x" onclick="rmCity(this)">✕</span></div>
+            <div class="city-tag">Warangal <span class="city-x" onclick="rmCity(this)">✕</span></div>
+          </div>
+          <input type="text" id="cityinput" placeholder="Type city name and press Enter to add" onkeydown="addCity(event)">
+        </div>
+        <div class="fg">
+          <label class="fl">Available days <span class="req">*</span></label>
+          <div class="days-wrap">
+            <div class="day-pill sel" onclick="togPill(this)">Monday</div>
+            <div class="day-pill sel" onclick="togPill(this)">Tuesday</div>
+            <div class="day-pill sel" onclick="togPill(this)">Wednesday</div>
+            <div class="day-pill sel" onclick="togPill(this)">Thursday</div>
+            <div class="day-pill sel" onclick="togPill(this)">Friday</div>
+            <div class="day-pill sel" onclick="togPill(this)">Saturday</div>
+            <div class="day-pill" onclick="togPill(this)">Sunday</div>
+          </div>
+        </div>
+        <div class="row3">
+          <div class="fg"><label class="fl">Available from</label><input type="time" value="09:00"></div>
+          <div class="fg"><label class="fl">Available until</label><input type="time" value="21:00"></div>
+          <div class="fg"><label class="fl">Max bookings / month</label>
+            <select><option>Up to 5</option><option selected>Up to 10</option><option>Up to 20</option><option>Unlimited</option></select>
+          </div>
+        </div>
+        <div class="fg"><label class="fl">Advance booking required</label>
+          <select><option>At least 1 day before</option><option>At least 3 days before</option><option selected>At least 7 days before</option><option>At least 14 days before</option><option>At least 30 days before</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goBack()">← Back</button>
+      <div class="step-hint">Step 5 of 8</div>
+      <button class="btn-next" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 6: DOCUMENTS ═══ -->
+  <div class="reg-step" id="step-6">
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">Documents & verification</div>
+        <div class="fc-sub">Required to verify your identity, enable payouts, and go live on Utsav</div>
+      </div>
+      <div class="fc-body">
+        <div class="warn-box">⏱️ Documents are reviewed within <strong>24–48 hours</strong>. You can continue setting up your profile while we verify. You'll be notified via SMS and email once approved.</div>
+        <div class="row2">
+          <div class="fg">
+            <label class="fl">Aadhaar card <span class="req">*</span></label>
+            <div class="doc-done">✅ Aadhaar_Kumar.pdf — uploaded</div>
+          </div>
+          <div class="fg">
+            <label class="fl">PAN card <span class="req">*</span></label>
+            <div class="doc-upload" id="du-pan" onclick="fakeUpload('du-pan','PAN_Kumar.jpg')">
+              <div class="du-ic">📄</div>
+              <div class="du-lbl">Click to upload PAN card</div>
+              <div class="du-sub">JPG, PNG or PDF — max 5MB</div>
+            </div>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="fg">
+            <label class="fl">Bank account / cancelled cheque <span class="req">*</span></label>
+            <div class="doc-upload" id="du-bank" onclick="fakeUpload('du-bank','Bank_cheque.pdf')">
+              <div class="du-ic">🏦</div>
+              <div class="du-lbl">Upload bank proof</div>
+              <div class="du-sub">Required for payouts. Cheque / passbook / letter.</div>
+            </div>
+          </div>
+          <div class="fg">
+            <label class="fl">GST certificate <span style="font-size:0.72rem;color:var(--mut)">(optional)</span></label>
+            <div class="doc-upload" id="du-gst" onclick="fakeUpload('du-gst','GST_certificate.pdf')">
+              <div class="du-ic">📋</div>
+              <div class="du-lbl">Upload GST certificate</div>
+              <div class="du-sub">Only if GST registered</div>
+            </div>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Portfolio samples <span class="req">*</span> <span style="font-size:0.72rem;color:var(--mut)">— up to 10 files</span></label>
+          <div class="doc-upload" id="du-port" onclick="fakeUpload('du-port','Portfolio_samples.zip')">
+            <div class="du-ic">🖼️</div>
+            <div class="du-lbl">Upload photos or videos of your past work</div>
+            <div class="du-sub">JPG, PNG, MP4, MOV — Max 50MB total. Quality samples help you get more bookings.</div>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Bank account number <span class="req">*</span></label>
+          <input type="text" placeholder="Enter your bank account number">
+        </div>
+        <div class="row2">
+          <div class="fg"><label class="fl">IFSC code <span class="req">*</span></label><input type="text" placeholder="e.g. HDFC0001234"></div>
+          <div class="fg"><label class="fl">UPI ID <span style="font-size:0.72rem;color:var(--mut)">(optional)</span></label><input type="text" placeholder="yourname@bankname"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goBack()">← Back</button>
+      <div class="step-hint">Step 6 of 8</div>
+      <button class="btn-next" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 7: PLAN ═══ -->
+  <div class="reg-step" id="step-7">
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">Choose your listing plan</div>
+        <div class="fc-sub">All plans include your vendor profile. Upgrade or downgrade anytime.</div>
+      </div>
+      <div class="fc-body">
+        <div class="plan-grid">
+          <div class="plan-card" onclick="selPlan(this,'Starter — Free')">
+            <div class="plan-name">Starter</div>
+            <div class="plan-price">Free <span>forever</span></div>
+            <ul class="plan-features">
+              <li>Public vendor profile</li>
+              <li>Up to 3 service listings</li>
+              <li>Booking requests</li>
+              <li>Basic dashboard</li>
+              <li>Customer reviews</li>
+            </ul>
+          </div>
+          <div class="plan-card sel" onclick="selPlan(this,'Growth — ₹999/month')">
+            <div class="plan-popular">⭐ Most popular</div>
+            <div class="plan-name">Growth</div>
+            <div class="plan-price">₹999 <span>/month</span></div>
+            <ul class="plan-features">
+              <li>Everything in Starter</li>
+              <li>Up to 10 service listings</li>
+              <li>Priority search ranking</li>
+              <li>Verified badge</li>
+              <li>Full analytics</li>
+              <li>Promotional discounts</li>
+            </ul>
+          </div>
+          <div class="plan-card" onclick="selPlan(this,'Premium — ₹2,499/month')">
+            <div class="plan-name">Premium</div>
+            <div class="plan-price">₹2,499 <span>/month</span></div>
+            <ul class="plan-features">
+              <li>Everything in Growth</li>
+              <li>Unlimited services</li>
+              <li>Homepage featured slot</li>
+              <li>Dedicated account manager</li>
+              <li>Lead generation ads</li>
+              <li>Custom profile banner</li>
+            </ul>
+          </div>
+        </div>
+        <div class="info-box">💸 <strong>Platform commission: 10%</strong> on each confirmed and completed booking — applies across all plans. No hidden charges. Commission is deducted before payout.</div>
+        <div class="fg"><label class="fl">Promo / referral code</label><input type="text" placeholder="Enter code if you have one (optional)"></div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goBack()">← Back</button>
+      <div class="step-hint">Step 7 of 8</div>
+      <button class="btn-next" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 8: REVIEW ═══ -->
+  <div class="reg-step" id="step-8">
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">Review & submit</div>
+        <div class="fc-sub">Check everything before submitting your registration</div>
+      </div>
+      <div class="fc-body">
+        <div class="rv-block">
+          <div class="rv-head"><h4>Account details</h4><span class="rv-edit" onclick="goStep(1)">Edit</span></div>
+          <div class="rv-body">
+            <div class="rv-row"><span class="rv-lbl">Name</span><span class="rv-val" id="rv_name">Roshan Kumar</span></div>
+            <div class="rv-row"><span class="rv-lbl">Phone</span><span class="rv-val" id="rv_phone">+91 98765 43210</span></div>
+            <div class="rv-row"><span class="rv-lbl">Email</span><span class="rv-val" id="rv_email">roshan@email.com</span></div>
+          </div>
+        </div>
+        <div class="rv-block">
+          <div class="rv-head"><h4>Business</h4><span class="rv-edit" onclick="goStep(2)">Edit</span></div>
+          <div class="rv-body">
+            <div class="rv-row"><span class="rv-lbl">Business name</span><span class="rv-val" id="rv_bname">Roshan Wedding Photography</span></div>
+            <div class="rv-row"><span class="rv-lbl">Experience</span><span class="rv-val">5–10 years</span></div>
+          </div>
+        </div>
+        <div class="rv-block">
+          <div class="rv-head"><h4>Category & services</h4><span class="rv-edit" onclick="goStep(3)">Edit</span></div>
+          <div class="rv-body">
+            <div class="rv-row"><span class="rv-lbl">Primary category</span><span class="rv-val" id="rv_cat">Photography</span></div>
+            <div class="rv-row"><span class="rv-lbl">Services listed</span><span class="rv-val" id="rv_svc">2 packages</span></div>
+          </div>
+        </div>
+        <div class="rv-block">
+          <div class="rv-head"><h4>Location & availability</h4><span class="rv-edit" onclick="goStep(5)">Edit</span></div>
+          <div class="rv-body">
+            <div class="rv-row"><span class="rv-lbl">Primary city</span><span class="rv-val">Hyderabad</span></div>
+            <div class="rv-row"><span class="rv-lbl">Travel coverage</span><span class="rv-val">Pan India</span></div>
+            <div class="rv-row"><span class="rv-lbl">Available days</span><span class="rv-val">Mon – Sat</span></div>
+          </div>
+        </div>
+        <div class="rv-block">
+          <div class="rv-head"><h4>Documents</h4><span class="rv-edit" onclick="goStep(6)">Edit</span></div>
+          <div class="rv-body">
+            <div class="rv-row"><span class="rv-lbl">Aadhaar</span><span class="rv-val" style="color:var(--grn)">✅ Uploaded</span></div>
+            <div class="rv-row"><span class="rv-lbl">PAN card</span><span class="rv-val" style="color:var(--grn)">✅ Uploaded</span></div>
+            <div class="rv-row"><span class="rv-lbl">Portfolio</span><span class="rv-val" style="color:var(--grn)">✅ Uploaded</span></div>
+          </div>
+        </div>
+        <div class="rv-block">
+          <div class="rv-head"><h4>Listing plan</h4><span class="rv-edit" onclick="goStep(7)">Edit</span></div>
+          <div class="rv-body">
+            <div class="rv-row"><span class="rv-lbl">Selected plan</span><span class="rv-val" id="rv_plan">Growth — ₹999/month</span></div>
+            <div class="rv-row"><span class="rv-lbl">Platform commission</span><span class="rv-val">10% per completed booking</span></div>
+          </div>
+        </div>
+        <div class="info-box" style="margin-top:16px">By clicking <strong>Submit Registration</strong>, you confirm that all provided information is accurate and you agree to Utsav's vendor terms of service.</div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goBack()">← Back</button>
+      <div class="step-hint">Step 8 of 8</div>
+      <button class="btn-next" onclick="submitReg()" style="background:linear-gradient(135deg,#1E9050,#0F6E56)">🚀 Submit Registration</button>
+    </div>
+  </div>
+
+  <!-- ═══ SUCCESS ═══ -->
+  <div class="reg-step" id="step-success">
+    <div class="form-card">
+      <div class="fc-body">
+        <div class="success-wrap">
+          <div class="tick-circle">✓</div>
+          <div class="succ-title">Registration Submitted!</div>
+          <div class="succ-sub">Welcome to Utsav Partner, <strong id="succ_name">Roshan</strong>! 🎉<br>Your application is under review. We'll notify you via SMS and email within 24–48 hours once your account is approved and live.</div>
+          <div class="what-next">
+            <div class="wn-title">What happens next</div>
+            <div class="wn-item"><div class="wn-num">1</div><span>Our team reviews your documents and verifies your business (24–48 hrs)</span></div>
+            <div class="wn-item"><div class="wn-num">2</div><span>You receive an SMS + email confirmation when your profile goes live on Utsav.in</span></div>
+            <div class="wn-item"><div class="wn-num">3</div><span>Customers start discovering your profile and sending booking requests</span></div>
+            <div class="wn-item"><div class="wn-num">4</div><span>Accept bookings, complete events, and get paid — payouts processed on the 25th of each month</span></div>
+          </div>
+          <button class="btn-dashboard" onclick="window.location.href='utsav-vendor-partner.html'">Go to Vendor Dashboard →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<script>
+const STEPS=[
+  {id:'step-1',lbl:'Account'},
+  {id:'step-2',lbl:'Business'},
+  {id:'step-3',lbl:'Category'},
+  {id:'step-4',lbl:'Services'},
+  {id:'step-5',lbl:'Location'},
+  {id:'step-6',lbl:'Documents'},
+  {id:'step-7',lbl:'Plan'},
+  {id:'step-8',lbl:'Review'}
+];
+let cur=1;
+let selCatName='Photography';
+let selPlanName='Growth — ₹999/month';
+
+function buildTrack(){
+  const t=document.getElementById('stepstrack');
+  t.innerHTML='';
+  STEPS.forEach((s,i)=>{
+    const n=i+1;
+    const dc=n<cur?'done':n===cur?'active':'';
+    const lc=n<cur?'done':n===cur?'active':'';
+    t.innerHTML+=`<div class="st-item"><div class="st-dot ${dc}">${n<cur?'✓':n}</div><div class="st-lbl ${lc}">${s.lbl}</div></div>`;
+    if(i<STEPS.length-1){
+      t.innerHTML+=`<div class="st-line ${n<cur?'done':''}"></div>`;
+    }
+  });
+}
+
+function showStep(n){
+  document.querySelectorAll('.reg-step').forEach(p=>p.classList.remove('act'));
+  if(n>STEPS.length){
+    document.getElementById('step-success').classList.add('act');
+    document.getElementById('succ_name').textContent=(document.getElementById('s1_name').value||'Roshan').split(' ')[0];
+    return;
+  }
+  document.getElementById(STEPS[n-1].id).classList.add('act');
+  buildTrack();
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===STEPS.length){
+    const nm=document.getElementById('s1_name').value;const ph=document.getElementById('s1_phone').value;const em=document.getElementById('s1_email').value;const bn=document.getElementById('s2_bname').value;
+    if(nm)document.getElementById('rv_name').textContent=nm;
+    if(ph)document.getElementById('rv_phone').textContent=ph;
+    if(em)document.getElementById('rv_email').textContent=em;
+    if(bn)document.getElementById('rv_bname').textContent=bn;
+    document.getElementById('rv_cat').textContent=selCatName;
+    document.getElementById('rv_plan').textContent=selPlanName;
+    document.getElementById('rv_svc').textContent=document.querySelectorAll('.svc-row').length+' packages';
+  }
+}
+
+function goNext(){cur++;showStep(cur);}
+function goBack(){if(cur>1){cur--;showStep(cur);}}
+function goStep(n){cur=n;showStep(cur);}
+function submitReg(){cur=STEPS.length+1;showStep(cur);}
+
+function selCat(el,name){
+  document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');selCatName=name;
+}
+function togCk(el){
+  el.classList.toggle('sel');
+  el.querySelector('.ck-box').innerHTML=el.classList.contains('sel')?'✓':'';
+}
+function togPill(el){el.classList.toggle('sel');}
+
+function addSvc(){
+  const r=document.createElement('div');r.className='svc-row';
+  r.innerHTML=`<input type="text" placeholder="Service / package name"><input type="number" placeholder="Price in ₹"><select><option>per event</option><option>per day</option><option>per hour</option><option>per plate</option><option>per person</option><option>per session</option></select><button class="del-btn" onclick="delSvc(this)" title="Remove">✕</button>`;
+  document.getElementById('svcrows').appendChild(r);
+}
+function delSvc(btn){
+  if(document.querySelectorAll('.svc-row').length>1)btn.closest('.svc-row').remove();
+}
+function addCity(e){
+  if(e.key==='Enter'){
+    const v=e.target.value.trim();if(!v)return;
+    const tag=document.createElement('div');tag.className='city-tag';
+    tag.innerHTML=v+' <span class="city-x" onclick="rmCity(this)">✕</span>';
+    document.getElementById('citylist').appendChild(tag);
+    e.target.value='';
+  }
+}
+function rmCity(x){x.closest('.city-tag').remove();}
+
+function selPlan(el,name){
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');selPlanName=name;
+}
+
+function fakeUpload(id,fname){
+  const el=document.getElementById(id);
+  if(el)el.outerHTML=`<div class="doc-done">✅ ${fname} — uploaded</div>`;
+}
+
+buildTrack();
+</script>
+</body>
+</html>

@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utsav Partner — Vendor Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --saf:#E8560A;--dr:#A01E08;--gold:#E09800;--ivory:#FFF8EE;--warm:#FFF0D4;
+  --dark:#14080A;--dk2:#1F0E05;--mut:#7A5F42;--bdr:#E8D5B7;
+  --gr:#1A8A45;--red:#C02828;--blue:#1455A8;--purple:#6B21A8;
+  --card:#FFFFFF;--bg:#F7F0E6;
+  --sh:0 2px 16px rgba(20,8,10,.07);--shl:0 8px 40px rgba(20,8,10,.13);
+  --saf-glow:0 0 0 3px rgba(232,86,10,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);display:flex;min-height:100vh;overflow-x:hidden;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:240px;background:var(--dark);flex-shrink:0;
+  position:fixed;top:0;left:0;bottom:0;z-index:200;
+  display:flex;flex-direction:column;overflow-y:auto;
+  transition:transform .3s ease;
+}
+.sb-brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-logo{font-family:'Yeseva One',serif;font-size:1.35rem;color:#FF8C3A;line-height:1;}
+.sb-logo span{color:#C9A87C;font-size:.72rem;font-weight:400;display:block;margin-top:3px;letter-spacing:.5px;}
+.sb-vendor{display:flex;align-items:center;gap:11px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--saf),var(--dr));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.sb-vname{font-size:.82rem;font-weight:600;color:#fff;line-height:1.2;}
+.sb-vstatus{font-size:.68rem;color:#4CAF50;margin-top:2px;display:flex;align-items:center;gap:4px;}
+.sb-vstatus::before{content:'';width:6px;height:6px;border-radius:50%;background:#4CAF50;flex-shrink:0;}
+.sb-nav{flex:1;padding:12px 0;}
+.sb-sec{padding:6px 20px 4px;font-size:.62rem;font-weight:700;letter-spacing:1.5px;color:rgba(201,168,124,.5);text-transform:uppercase;margin-top:10px;}
+.sb-link{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 20px;color:#C9A87C;text-decoration:none;
+  font-size:.84rem;font-weight:500;transition:all .2s;
+  border-left:3px solid transparent;cursor:pointer;
+}
+.sb-link:hover{background:rgba(255,140,58,.08);color:#FF8C3A;}
+.sb-link.on{background:rgba(255,140,58,.12);color:#FF8C3A;border-left-color:var(--saf);}
+.sb-link .ic{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+.sb-badge{margin-left:auto;background:var(--saf);color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sb-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,.07);font-size:.75rem;color:rgba(201,168,124,.5);}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  position:fixed;top:0;left:240px;right:0;height:62px;z-index:100;
+  background:rgba(247,240,230,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;
+}
+.tb-left{display:flex;align-items:center;gap:14px;}
+.tb-page{font-family:'Yeseva One',serif;font-size:1.25rem;color:var(--dark);}
+.tb-sub{font-size:.78rem;color:var(--mut);}
+.tb-right{display:flex;align-items:center;gap:14px;}
+.notif-btn{position:relative;width:38px;height:38px;border-radius:50%;background:var(--card);border:1.5px solid var(--bdr);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .2s;}
+.notif-btn:hover{border-color:var(--saf);box-shadow:var(--saf-glow);}
+.notif-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--saf);border:2px solid var(--bg);}
+.tb-plan{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--dark),var(--dk2));color:#FF8C3A;padding:7px 14px;border-radius:20px;font-size:.76rem;font-weight:600;}
+.hamburger{display:none;width:36px;height:36px;border-radius:8px;background:var(--card);border:1.5px solid var(--bdr);align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:4px;padding:8px;}
+.hamburger span{width:18px;height:2px;background:var(--dark);border-radius:2px;}
+
+/* ══ MAIN ══ */
+.main{margin-left:240px;padding-top:62px;min-height:100vh;flex:1;}
+.page{display:none;padding:26px 28px 60px;}
+.page.on{display:block;}
+
+/* ══ KPI CARDS ══ */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.kpi{background:var(--card);border-radius:16px;padding:20px 18px;box-shadow:var(--sh);border-top:3px solid var(--c,var(--saf));position:relative;overflow:hidden;}
+.kpi::after{content:var(--ico,'');position:absolute;right:14px;bottom:10px;font-size:2.2rem;opacity:.1;}
+.kpi-val{font-size:1.8rem;font-weight:700;color:var(--c,var(--saf));line-height:1;margin-bottom:4px;}
+.kpi-label{font-size:.75rem;color:var(--mut);margin-bottom:6px;}
+.kpi-chg{font-size:.72rem;font-weight:600;}
+.kpi-chg.up{color:var(--gr);}
+.kpi-chg.dn{color:var(--red);}
+
+/* ══ SECTION HEADERS ══ */
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.sec-hd h3{font-family:'Yeseva One',serif;font-size:1.1rem;}
+.sec-hd a{font-size:.8rem;color:var(--saf);cursor:pointer;font-weight:600;text-decoration:none;}
+
+/* ══ CARDS ══ */
+.card{background:var(--card);border-radius:16px;box-shadow:var(--sh);overflow:hidden;}
+.card-head{padding:16px 20px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.card-head h4{font-weight:700;font-size:.95rem;}
+.card-body{padding:20px;}
+
+/* ══ TABLES ══ */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{padding:10px 14px;text-align:left;font-size:.72rem;font-weight:700;letter-spacing:.5px;color:var(--mut);background:var(--bg);border-bottom:1px solid var(--bdr);text-transform:uppercase;}
+.tbl td{padding:12px 14px;font-size:.82rem;border-bottom:1px solid var(--bdr);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:#FFFAF4;}
+.tbl-wrap{overflow-x:auto;border-radius:16px;box-shadow:var(--sh);}
+.tbl-wrap table{background:var(--card);}
+
+/* ══ BADGES ══ */
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:8px;font-size:.7rem;font-weight:600;}
+.bdg-gr{background:#E6F4EC;color:#1A7035;}
+.bdg-or{background:#FEF3E2;color:#A05800;}
+.bdg-re{background:#FEE8E8;color:#A01818;}
+.bdg-bl{background:#E8F0FD;color:#1455A8;}
+.bdg-pu{background:#F3E8FD;color:#6B21A8;}
+.bdg-go{background:#FEF9E6;color:#835000;}
+
+/* ══ ACTION BUTTONS ══ */
+.btn{padding:8px 18px;border-radius:10px;font-size:.82rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-pr{background:linear-gradient(135deg,var(--saf),var(--dr));color:#fff;}
+.btn-pr:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,86,10,.35);}
+.btn-sc{background:transparent;border:1.5px solid var(--bdr);color:var(--mut);}
+.btn-sc:hover{border-color:var(--saf);color:var(--saf);}
+.btn-gr{background:linear-gradient(135deg,var(--gr),#0D6E35);color:#fff;}
+.btn-gr:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(26,138,69,.35);}
+.btn-re{background:linear-gradient(135deg,var(--red),#8A1010);color:#fff;}
+.btn-sm{padding:5px 12px;font-size:.74rem;}
+
+/* ══ GRID LAYOUTS ══ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.g2-3{display:grid;grid-template-columns:2fr 1fr;gap:20px;}
+
+/* ══ BOOKING CARD ══ */
+.bk-card{background:var(--card);border-radius:14px;padding:18px;box-shadow:var(--sh);border-left:4px solid var(--c,var(--saf));margin-bottom:12px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;}
+.bk-ev{font-size:1.1rem;margin-bottom:2px;}
+.bk-name{font-weight:700;font-size:.95rem;margin-bottom:2px;}
+.bk-meta{font-size:.77rem;color:var(--mut);display:flex;gap:12px;flex-wrap:wrap;}
+.bk-actions{display:flex;gap:8px;flex-shrink:0;}
+
+/* ══ STAT BAR ══ */
+.stat-bar{height:8px;background:var(--bdr);border-radius:4px;overflow:hidden;margin-top:6px;}
+.stat-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--saf),var(--gold));transition:width .8s ease;}
+
+/* ══ FORM ELEMENTS ══ */
+.fg{margin-bottom:14px;}
+.fl{display:block;font-size:.78rem;font-weight:600;margin-bottom:5px;color:var(--dark);}
+.fi{width:100%;padding:10px 13px;border:1.5px solid var(--bdr);border-radius:10px;font-size:.86rem;font-family:'DM Sans',sans-serif;background:var(--ivory);color:var(--dark);outline:none;transition:border .2s;}
+.fi:focus{border-color:var(--saf);background:#fff;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* ══ PROFILE AVATAR ══ */
+.prof-hero{background:linear-gradient(135deg,var(--dark),#3D1500);border-radius:16px;padding:28px;display:flex;align-items:center;gap:24px;margin-bottom:20px;position:relative;overflow:hidden;}
+.prof-hero::before{content:'🌸';position:absolute;right:20px;font-size:8rem;opacity:.06;pointer-events:none;}
+.prof-av{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--saf),var(--dr));display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;border:3px solid rgba(255,140,58,.4);}
+.prof-name{font-family:'Yeseva One',serif;font-size:1.5rem;color:#fff;margin-bottom:4px;}
+.prof-cat{font-size:.82rem;color:#C9A87C;margin-bottom:10px;}
+.prof-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.prof-tag{background:rgba(255,140,58,.15);border:1px solid rgba(255,140,58,.3);color:#FF8C3A;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600;}
+
+/* ══ RATING STARS ══ */
+.stars{color:#E09800;letter-spacing:2px;font-size:.9rem;}
+
+/* ══ REVIEW CARD ══ */
+.rv-card{background:var(--card);border-radius:14px;padding:18px;box-shadow:var(--sh);margin-bottom:12px;border-left:3px solid var(--gold);}
+.rv-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.rv-auth{display:flex;align-items:center;gap:10px;}
+.rv-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--saf));display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.rv-nm{font-weight:600;font-size:.88rem;}
+.rv-ev{font-size:.72rem;color:var(--mut);}
+.rv-txt{font-size:.83rem;color:var(--mut);line-height:1.7;margin-bottom:10px;font-style:italic;}
+.rv-reply{background:var(--bg);border-radius:10px;padding:10px 14px;font-size:.78rem;color:var(--dark);border-left:3px solid var(--saf);}
+
+/* ══ CHAT ══ */
+.chat-list{border-right:1px solid var(--bdr);height:500px;overflow-y:auto;}
+.chat-item{padding:14px 16px;border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .2s;}
+.chat-item:hover,.chat-item.on{background:var(--warm);}
+.chat-item.on{border-left:3px solid var(--saf);}
+.ci-top{display:flex;justify-content:space-between;margin-bottom:3px;}
+.ci-name{font-weight:600;font-size:.85rem;}
+.ci-time{font-size:.7rem;color:var(--mut);}
+.ci-msg{font-size:.78rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ci-dot{width:8px;height:8px;border-radius:50%;background:var(--saf);flex-shrink:0;}
+.chat-main{height:500px;display:flex;flex-direction:column;}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;}
+.msg{max-width:72%;padding:10px 14px;border-radius:14px;font-size:.83rem;line-height:1.6;}
+.msg.in{background:var(--bg);color:var(--dark);border-bottom-left-radius:4px;align-self:flex-start;}
+.msg.out{background:linear-gradient(135deg,var(--saf),var(--dr));color:#fff;border-bottom-right-radius:4px;align-self:flex-end;}
+.msg-time{font-size:.65rem;opacity:.6;margin-top:4px;text-align:right;}
+.chat-input{padding:14px 16px;border-top:1px solid var(--bdr);display:flex;gap:10px;}
+.chat-input input{flex:1;padding:10px 14px;border:1.5px solid var(--bdr);border-radius:10px;font-size:.85rem;font-family:'DM Sans',sans-serif;outline:none;}
+.chat-input input:focus{border-color:var(--saf);}
+
+/* ══ CALENDAR ══ */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-day-hd{text-align:center;font-size:.68rem;font-weight:700;color:var(--mut);padding:6px 0;}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.8rem;cursor:pointer;transition:all .2s;position:relative;}
+.cal-day:hover{background:var(--warm);}
+.cal-day.today{background:var(--saf);color:#fff;font-weight:700;}
+.cal-day.booked{background:#E6F4EC;color:var(--gr);font-weight:600;}
+.cal-day.blocked{background:#FEE8E8;color:var(--red);font-weight:600;}
+.cal-day.other{color:#ccc;}
+.cal-dot{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--saf);}
+
+/* ══ PORTFOLIO GRID ══ */
+.port-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+.port-item{aspect-ratio:1;border-radius:12px;background:linear-gradient(135deg,var(--saf)22,var(--gold)22);border:2px dashed var(--bdr);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;font-size:2rem;}
+.port-item:hover{border-color:var(--saf);transform:scale(1.03);}
+.port-item.filled{background:linear-gradient(135deg,#FF6B00,#C0392B);border:none;color:white;}
+.port-del{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;display:none;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;}
+.port-item.filled:hover .port-del{display:flex;}
+
+/* ══ PAYOUT CARD ══ */
+.payout-hero{background:linear-gradient(135deg,var(--gr),#0D6E35);border-radius:16px;padding:24px;color:#fff;margin-bottom:16px;}
+.payout-hero h3{font-family:'Yeseva One',serif;font-size:1.1rem;opacity:.8;margin-bottom:6px;}
+.payout-amount{font-family:'Yeseva One',serif;font-size:2.5rem;margin-bottom:4px;}
+.payout-sub{font-size:.78rem;opacity:.75;}
+
+/* ══ NOTIF ══ */
+.notif-item{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid var(--bdr);align-items:flex-start;}
+.notif-item:last-child{border-bottom:none;}
+.ni-ic{width:38px;height:38px;border-radius:50%;background:var(--c,#FEF3E2);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.ni-title{font-size:.85rem;font-weight:600;margin-bottom:2px;}
+.ni-sub{font-size:.75rem;color:var(--mut);}
+.ni-time{font-size:.7rem;color:var(--mut);margin-top:4px;}
+.ni-unread{width:8px;height:8px;border-radius:50%;background:var(--saf);flex-shrink:0;margin-top:5px;}
+
+/* ══ TOGGLE ══ */
+.toggle{width:40px;height:22px;border-radius:11px;background:var(--bdr);position:relative;cursor:pointer;transition:background .25s;flex-shrink:0;}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.toggle.on{background:var(--gr);}
+.toggle.on::after{transform:translateX(18px);}
+
+/* ══ INFO BOXES ══ */
+.info{background:#E8F0FD;border:1px solid #B5D0FA;border-radius:10px;padding:12px 14px;font-size:.78rem;color:#0C447C;line-height:1.6;margin-bottom:14px;}
+.warn{background:#FEF3E2;border:1px solid #F5C060;border-radius:10px;padding:12px 14px;font-size:.78rem;color:#7A3C00;line-height:1.6;margin-bottom:14px;}
+.succ{background:#E6F4EC;border:1px solid #8BCF9F;border-radius:10px;padding:12px 14px;font-size:.78rem;color:#0E5F2A;line-height:1.6;margin-bottom:14px;}
+
+/* ══ ANALYTICS CHART (CSS bars) ══ */
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:120px;margin-top:10px;}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bar{width:100%;background:linear-gradient(180deg,var(--saf),var(--gold));border-radius:4px 4px 0 0;transition:height .6s ease;min-height:4px;}
+.bar-lbl{font-size:.64rem;color:var(--mut);}
+.bar-val{font-size:.64rem;font-weight:700;color:var(--saf);}
+
+/* ══ PLAN BADGE ══ */
+.plan-crown{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--gold),#B8790A);color:#fff;padding:5px 12px;border-radius:20px;font-size:.72rem;font-weight:700;}
+
+/* ══ ALERT BANNER ══ */
+.alert-banner{background:linear-gradient(135deg,#FFF3E0,#FFE8C0);border:1.5px solid var(--gold);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.ab-ic{font-size:1.4rem;flex-shrink:0;}
+.ab-title{font-weight:700;font-size:.88rem;margin-bottom:2px;color:#5C3500;}
+.ab-sub{font-size:.76rem;color:#7A4500;}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr);}  .g2{grid-template-columns:1fr;}.g3{grid-template-columns:1fr 1fr;}.g2-3{grid-template-columns:1fr;}}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .topbar{left:0;}
+  .hamburger{display:flex;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .g3{grid-template-columns:1fr;}
+  .page{padding:16px;}
+}
+@media(max-width:480px){.kpi-grid{grid-template-columns:1fr;}.bk-card{grid-template-columns:1fr;}.bk-actions{flex-wrap:wrap;}}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--gr);color:#fff;padding:12px 22px;border-radius:12px;font-weight:600;font-size:.86rem;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:slideIn .3s ease;pointer-events:none;}
+@keyframes slideIn{from{transform:translateX(50px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* ══ OVERLAY (mobile) ══ */
+.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:190;}
+.overlay-bg.on{display:block;}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<div class="overlay-bg" id="ovlBg" onclick="closeSB()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">🪔 Utsav Partner <span>VENDOR PORTAL</span></div>
+  </div>
+  <div class="sb-vendor">
+    <div class="sb-av">📸</div>
+    <div>
+      <div class="sb-vname">Roshan Kumar</div>
+      <div class="sb-vstatus">Live &amp; Active</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Main</div>
+    <div class="sb-link on" onclick="nav(this,'pg-home')"><span class="ic">📊</span>Dashboard</div>
+    <div class="sb-link" onclick="nav(this,'pg-bookings')"><span class="ic">📅</span>Bookings <span class="sb-badge">3</span></div>
+    <div class="sb-link" onclick="nav(this,'pg-calendar')"><span class="ic">🗓️</span>Calendar</div>
+    <div class="sb-link" onclick="nav(this,'pg-revenue')"><span class="ic">💰</span>Revenue & Payouts</div>
+    <div class="sb-sec">Profile</div>
+    <div class="sb-link" onclick="nav(this,'pg-profile')"><span class="ic">👤</span>My Profile</div>
+    <div class="sb-link" onclick="nav(this,'pg-services')"><span class="ic">🛍️</span>Services & Pricing</div>
+    <div class="sb-link" onclick="nav(this,'pg-portfolio')"><span class="ic">🖼️</span>Portfolio</div>
+    <div class="sb-sec">Insights</div>
+    <div class="sb-link" onclick="nav(this,'pg-analytics')"><span class="ic">📈</span>Analytics</div>
+    <div class="sb-link" onclick="nav(this,'pg-reviews')"><span class="ic">⭐</span>Reviews & Ratings</div>
+    <div class="sb-link" onclick="nav(this,'pg-messages')"><span class="ic">💬</span>Messages <span class="sb-badge">5</span></div>
+    <div class="sb-sec">Account</div>
+    <div class="sb-link" onclick="nav(this,'pg-documents')"><span class="ic">📄</span>Documents & KYC</div>
+    <div class="sb-link" onclick="nav(this,'pg-promotions')"><span class="ic">🏆</span>Promotions</div>
+    <div class="sb-link" onclick="nav(this,'pg-notifications')"><span class="ic">🔔</span>Notifications</div>
+    <div class="sb-link" onclick="nav(this,'pg-settings')"><span class="ic">⚙️</span>Settings</div>
+    <div class="sb-link" onclick="nav(this,'pg-support')"><span class="ic">🆘</span>Support</div>
+  </nav>
+  <div class="sb-footer">© 2024 Utsav Technologies Pvt. Ltd.</div>
+</div>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="hamburger" onclick="toggleSB()"><span></span><span></span><span></span></div>
+    <div>
+      <div class="tb-page" id="tb-title">Dashboard</div>
+      <div class="tb-sub" id="tb-sub">Welcome back, Roshan 👋</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="notif-btn" onclick="nav(document.querySelector('[onclick*=pg-notifications]'),'pg-notifications')">🔔<div class="notif-dot"></div></div>
+    <div class="plan-crown">👑 Growth Plan</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════ -->
+<div class="main">
+
+<!-- ════ DASHBOARD HOME ════ -->
+<div class="page on" id="pg-home">
+  <div class="alert-banner">
+    <div class="ab-ic">⚡</div>
+    <div>
+      <div class="ab-title">3 new booking requests waiting!</div>
+      <div class="ab-sub">Respond within 24 hours for better ranking. Unanswered requests may be reassigned.</div>
+    </div>
+    <button class="btn btn-pr btn-sm" style="margin-left:auto;flex-shrink:0;" onclick="nav(document.querySelector('[onclick*=pg-bookings]'),'pg-bookings')">View Requests</button>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi" style="--c:#E8560A;--ico:'📅'"><div class="kpi-val">28</div><div class="kpi-label">Total Bookings</div><div class="kpi-chg up">↑ 4 this month</div></div>
+    <div class="kpi" style="--c:#1A8A45;--ico:'💰'"><div class="kpi-val">₹2.4L</div><div class="kpi-label">Total Earned</div><div class="kpi-chg up">↑ ₹28K vs last month</div></div>
+    <div class="kpi" style="--c:#1455A8;--ico:'👁️'"><div class="kpi-val">1,842</div><div class="kpi-label">Profile Views</div><div class="kpi-chg up">↑ 12% this week</div></div>
+    <div class="kpi" style="--c:#E09800;--ico:'⭐'"><div class="kpi-val">4.9</div><div class="kpi-label">Avg. Rating</div><div class="kpi-chg up">Based on 28 reviews</div></div>
+  </div>
+
+  <div class="g2-3" style="margin-bottom:24px;">
+    <div>
+      <div class="sec-hd"><h3>Upcoming Bookings</h3><a onclick="nav(document.querySelector('[onclick*=pg-bookings]'),'pg-bookings')">View all →</a></div>
+      <div class="bk-card" style="--c:#E8560A">
+        <div>
+          <div class="bk-ev">💍</div>
+          <div class="bk-name">Priya & Rahul Wedding</div>
+          <div class="bk-meta"><span>📅 15 Feb 2025</span><span>📍 Taj Falaknuma, Hyd</span><span>💰 ₹65,000</span></div>
+        </div>
+        <div class="bk-actions"><span class="bdg bdg-gr">Confirmed</span></div>
+      </div>
+      <div class="bk-card" style="--c:#E09800">
+        <div>
+          <div class="bk-ev">🎂</div>
+          <div class="bk-name">Arjun's 1st Birthday</div>
+          <div class="bk-meta"><span>📅 22 Feb 2025</span><span>📍 Home, Kondapur</span><span>💰 ₹12,000</span></div>
+        </div>
+        <div class="bk-actions"><span class="bdg bdg-bl">Processing</span></div>
+      </div>
+      <div class="bk-card" style="--c:#1A8A45">
+        <div>
+          <div class="bk-ev">💒</div>
+          <div class="bk-name">Sneha & Kiran Engagement</div>
+          <div class="bk-meta"><span>📅 28 Feb 2025</span><span>📍 Radisson, Hyd</span><span>💰 ₹38,000</span></div>
+        </div>
+        <div class="bk-actions"><span class="bdg bdg-gr">Confirmed</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="sec-hd"><h3>Next Payout</h3></div>
+      <div class="payout-hero">
+        <h3>Available for Payout</h3>
+        <div class="payout-amount">₹18,200</div>
+        <div class="payout-sub">Processed on 25 Feb 2025 · HDFC ****4521</div>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:16px;">
+          <div style="display:flex;justify-content:space-between;font-size:.82rem;padding:6px 0;border-bottom:1px solid var(--bdr);"><span style="color:var(--mut)">Gross earnings</span><span style="font-weight:600;">₹20,222</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:.82rem;padding:6px 0;border-bottom:1px solid var(--bdr);"><span style="color:var(--mut)">Platform commission (10%)</span><span style="color:var(--red);font-weight:600;">−₹2,022</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:.88rem;padding:8px 0;font-weight:700;"><span>Net payout</span><span style="color:var(--gr);">₹18,200</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="sec-hd"><h3>Profile Completion</h3></div>
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><span style="font-size:.9rem;font-weight:600;">82% complete</span><span class="bdg bdg-or">Add more to rank higher</span></div>
+          <div class="stat-bar"><div class="stat-bar-fill" style="width:82%"></div></div>
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:.82rem;"><span>✅ Business description</span><span style="color:var(--gr);font-weight:600;">Done</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:.82rem;"><span>✅ Portfolio photos (8/10)</span><span style="color:var(--gr);font-weight:600;">Done</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:.82rem;"><span>⚠️ Add service video</span><span style="color:var(--saf);font-weight:600;cursor:pointer;" onclick="nav(document.querySelector('[onclick*=pg-portfolio]'),'pg-portfolio')">Add now</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:.82rem;"><span>⚠️ Awards & certifications</span><span style="color:var(--saf);font-weight:600;cursor:pointer;" onclick="nav(document.querySelector('[onclick*=pg-profile]'),'pg-profile')">Add now</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="sec-hd"><h3>Recent Reviews</h3><a onclick="nav(document.querySelector('[onclick*=pg-reviews]'),'pg-reviews')">View all →</a></div>
+      <div class="rv-card">
+        <div class="rv-top"><div class="rv-auth"><div class="rv-av">👩</div><div><div class="rv-nm">Priya Venkatesh</div><div class="rv-ev">💍 Wedding</div></div></div><div class="stars">★★★★★</div></div>
+        <div class="rv-txt">"Absolutely stunning photography! Every moment captured beautifully."</div>
+      </div>
+      <div class="rv-card">
+        <div class="rv-top"><div class="rv-auth"><div class="rv-av">👨</div><div><div class="rv-nm">Karthik Reddy</div><div class="rv-ev">💒 Engagement</div></div></div><div class="stars">★★★★★</div></div>
+        <div class="rv-txt">"Very professional. Delivered the album in 5 days. Highly recommend!"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ BOOKINGS ════ -->
+<div class="page" id="pg-bookings">
+  <div class="g3" style="margin-bottom:20px;">
+    <div class="kpi" style="--c:#E8560A"><div class="kpi-val">3</div><div class="kpi-label">New Requests</div><div class="kpi-chg up">Awaiting response</div></div>
+    <div class="kpi" style="--c:#1A8A45"><div class="kpi-val">12</div><div class="kpi-label">Confirmed</div><div class="kpi-chg up">This month</div></div>
+    <div class="kpi" style="--c:#1455A8"><div class="kpi-val">28</div><div class="kpi-label">Completed</div><div class="kpi-chg up">All time</div></div>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;">
+    <button class="btn btn-pr btn-sm" onclick="showTab('bk','requests',this)">🆕 New Requests (3)</button>
+    <button class="btn btn-sc btn-sm" onclick="showTab('bk','confirmed',this)">✅ Confirmed</button>
+    <button class="btn btn-sc btn-sm" onclick="showTab('bk','completed',this)">🏁 Completed</button>
+    <button class="btn btn-sc btn-sm" onclick="showTab('bk','cancelled',this)">❌ Cancelled</button>
+  </div>
+
+  <div id="bk-requests">
+    <div class="bk-card" style="--c:#E8560A">
+      <div><div class="bk-ev">💍</div><div class="bk-name">Ananya & Vikram Wedding</div><div class="bk-meta"><span>📅 10 Mar 2025</span><span>📍 ITC Kakatiya, Hyd</span><span>💰 ₹75,000</span><span>👥 400 guests</span></div></div>
+      <div class="bk-actions"><button class="btn btn-gr btn-sm" onclick="showToast('✅ Booking accepted!')">Accept</button><button class="btn btn-sc btn-sm">Decline</button><button class="btn btn-sc btn-sm">Chat</button></div>
+    </div>
+    <div class="bk-card" style="--c:#E09800">
+      <div><div class="bk-ev">🍼</div><div class="bk-name">Baby Namkaran Ceremony</div><div class="bk-meta"><span>📅 5 Mar 2025</span><span>📍 Home, Madhapur</span><span>💰 ₹18,000</span><span>👥 80 guests</span></div></div>
+      <div class="bk-actions"><button class="btn btn-gr btn-sm" onclick="showToast('✅ Booking accepted!')">Accept</button><button class="btn btn-sc btn-sm">Decline</button><button class="btn btn-sc btn-sm">Chat</button></div>
+    </div>
+    <div class="bk-card" style="--c:#1455A8">
+      <div><div class="bk-ev">🎂</div><div class="bk-name">Mehul's 30th Birthday</div><div class="bk-meta"><span>📅 18 Mar 2025</span><span>📍 The Park, Hyd</span><span>💰 ₹22,000</span><span>👥 60 guests</span></div></div>
+      <div class="bk-actions"><button class="btn btn-gr btn-sm" onclick="showToast('✅ Booking accepted!')">Accept</button><button class="btn btn-sc btn-sm">Decline</button><button class="btn btn-sc btn-sm">Chat</button></div>
+    </div>
+  </div>
+  <div id="bk-confirmed" style="display:none;">
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Event</th><th>Customer</th><th>Date</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody>
+      <tr><td>💍 Wedding</td><td>Priya Venkatesh</td><td>15 Feb 2025</td><td>₹65,000</td><td><span class="bdg bdg-gr">Confirmed</span></td><td><button class="btn btn-sc btn-sm">Details</button></td></tr>
+      <tr><td>💒 Engagement</td><td>Sneha & Kiran</td><td>28 Feb 2025</td><td>₹38,000</td><td><span class="bdg bdg-gr">Confirmed</span></td><td><button class="btn btn-sc btn-sm">Details</button></td></tr>
+    </tbody></table></div>
+  </div>
+  <div id="bk-completed" style="display:none;">
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Event</th><th>Customer</th><th>Date</th><th>Amount</th><th>Payout</th><th>Review</th></tr></thead><tbody>
+      <tr><td>💍 Wedding</td><td>Rahul & Deepa</td><td>10 Jan 2025</td><td>₹80,000</td><td><span class="bdg bdg-gr">Paid ✓</span></td><td><span class="stars" style="font-size:.8rem;">★★★★★</span></td></tr>
+      <tr><td>🎂 Birthday</td><td>Kavitha Nair</td><td>20 Jan 2025</td><td>₹15,000</td><td><span class="bdg bdg-gr">Paid ✓</span></td><td><span class="stars" style="font-size:.8rem;">★★★★☆</span></td></tr>
+      <tr><td>🍼 Cradle</td><td>Suresh Menon</td><td>5 Feb 2025</td><td>₹20,000</td><td><span class="bdg bdg-or">Processing</span></td><td><span style="font-size:.78rem;color:var(--mut);">Pending</span></td></tr>
+    </tbody></table></div>
+  </div>
+  <div id="bk-cancelled" style="display:none;">
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Event</th><th>Customer</th><th>Date</th><th>Amount</th><th>Reason</th><th>Refund</th></tr></thead><tbody>
+      <tr><td>💍 Wedding</td><td>Aisha Khan</td><td>1 Jan 2025</td><td>₹55,000</td><td>Customer cancelled</td><td><span class="bdg bdg-gr">50% Refunded</span></td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- ════ CALENDAR ════ -->
+<div class="page" id="pg-calendar">
+  <div class="g2-3">
+    <div class="card">
+      <div class="card-head"><h4>📅 February 2025</h4><div style="display:flex;gap:8px;"><button class="btn btn-sc btn-sm">‹ Prev</button><button class="btn btn-sc btn-sm">Next ›</button></div></div>
+      <div class="card-body">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:.75rem;">
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:#E6F4EC;display:inline-block;"></span>Booked</span>
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:#FEE8E8;display:inline-block;"></span>Blocked</span>
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--saf);display:inline-block;"></span>Today</span>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-day-hd">Sun</div><div class="cal-day-hd">Mon</div><div class="cal-day-hd">Tue</div><div class="cal-day-hd">Wed</div><div class="cal-day-hd">Thu</div><div class="cal-day-hd">Fri</div><div class="cal-day-hd">Sat</div>
+          <div class="cal-day other">26</div><div class="cal-day other">27</div><div class="cal-day other">28</div><div class="cal-day other">29</div><div class="cal-day other">30</div><div class="cal-day other">31</div><div class="cal-day">1</div>
+          <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div>
+          <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day booked">15<div class="cal-dot"></div></div>
+          <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day booked">22<div class="cal-dot"></div></div>
+          <div class="cal-day today">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day booked">28<div class="cal-dot"></div></div><div class="cal-day other">1</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head"><h4>Block Dates</h4></div>
+        <div class="card-body">
+          <div class="fg"><label class="fl">From date</label><input type="date" class="fi"></div>
+          <div class="fg"><label class="fl">To date</label><input type="date" class="fi"></div>
+          <div class="fg"><label class="fl">Reason</label><select class="fi"><option>Personal holiday</option><option>Festival</option><option>Other commitment</option></select></div>
+          <button class="btn btn-pr" style="width:100%;" onclick="showToast('📅 Dates blocked successfully!')">Block These Dates</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h4>Working Hours</h4></div>
+        <div class="card-body">
+          <div class="fr" style="margin-bottom:12px;"><div class="fg"><label class="fl">Start time</label><input type="time" class="fi" value="09:00"></div><div class="fg"><label class="fl">End time</label><input type="time" class="fi" value="21:00"></div></div>
+          <button class="btn btn-sc" style="width:100%;" onclick="showToast('⏰ Hours updated!')">Save Hours</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ REVENUE ════ -->
+<div class="page" id="pg-revenue">
+  <div class="kpi-grid" style="margin-bottom:24px;">
+    <div class="kpi" style="--c:#1A8A45"><div class="kpi-val">₹2.4L</div><div class="kpi-label">Total Earned</div><div class="kpi-chg up">Lifetime</div></div>
+    <div class="kpi" style="--c:#E8560A"><div class="kpi-val">₹28K</div><div class="kpi-label">This Month</div><div class="kpi-chg up">↑ 18% vs last</div></div>
+    <div class="kpi" style="--c:#1455A8"><div class="kpi-val">₹18.2K</div><div class="kpi-label">Next Payout</div><div class="kpi-chg up">25 Feb 2025</div></div>
+    <div class="kpi" style="--c:#6B21A8"><div class="kpi-val">10%</div><div class="kpi-label">Commission Rate</div><div class="kpi-chg" style="color:var(--mut);">Growth plan</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:24px;">
+    <div class="card">
+      <div class="card-head"><h4>Monthly Earnings</h4></div>
+      <div class="card-body">
+        <div class="chart-bars" id="earningsChart"></div>
+      </div>
+    </div>
+    <div>
+      <div class="payout-hero">
+        <h3>Upcoming Payout</h3>
+        <div class="payout-amount">₹18,200</div>
+        <div class="payout-sub">Scheduled: 25 Feb 2025 · HDFC ****4521</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h4>Payout History</h4></div>
+        <div class="card-body" style="padding:0;">
+          <table class="tbl"><thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+            <tr><td>25 Jan 2025</td><td style="font-weight:600;color:var(--gr);">₹22,500</td><td><span class="bdg bdg-gr">Paid ✓</span></td></tr>
+            <tr><td>25 Dec 2024</td><td style="font-weight:600;color:var(--gr);">₹18,000</td><td><span class="bdg bdg-gr">Paid ✓</span></td></tr>
+            <tr><td>25 Nov 2024</td><td style="font-weight:600;color:var(--gr);">₹31,500</td><td><span class="bdg bdg-gr">Paid ✓</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PROFILE ════ -->
+<div class="page" id="pg-profile">
+  <div class="prof-hero">
+    <div class="prof-av">📸</div>
+    <div>
+      <div class="prof-name">Roshan Wedding Photography</div>
+      <div class="prof-cat">📷 Photography & Videography · Banjara Hills, Hyderabad</div>
+      <div class="prof-tags"><span class="prof-tag">⚡ Top Rated</span><span class="prof-tag">✅ Verified</span><span class="prof-tag">⭐ 4.9 Rating</span><span class="prof-tag">28 Bookings</span></div>
+    </div>
+    <button class="btn btn-pr" style="margin-left:auto;flex-shrink:0;" onclick="showToast('👁️ Preview opened in new tab!')">Preview Public Profile</button>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-head"><h4>Business Information</h4></div>
+      <div class="card-body">
+        <div class="fg"><label class="fl">Business Name</label><input class="fi" value="Roshan Wedding Photography"></div>
+        <div class="fr"><div class="fg"><label class="fl">Phone</label><input class="fi" value="+91 98765 43210"></div><div class="fg"><label class="fl">Email</label><input class="fi" value="roshan@photography.com"></div></div>
+        <div class="fg"><label class="fl">Website</label><input class="fi" value="https://roshanphotos.in"></div>
+        <div class="fg"><label class="fl">Business Description</label><textarea class="fi" rows="4">Award-winning wedding photographers with 10+ years experience. Specializing in candid photography, drone shots & cinematic videos across India.</textarea></div>
+        <button class="btn btn-pr" onclick="showToast('✅ Profile saved!')">Save Changes</button>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head"><h4>Social Media</h4></div>
+        <div class="card-body">
+          <div class="fg"><label class="fl">Instagram</label><input class="fi" value="@roshanphotography"></div>
+          <div class="fg"><label class="fl">Facebook</label><input class="fi" value="facebook.com/roshanphotos"></div>
+          <div class="fg"><label class="fl">YouTube</label><input class="fi" placeholder="YouTube channel URL"></div>
+          <button class="btn btn-sc" style="width:100%;" onclick="showToast('✅ Social links updated!')">Update Links</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h4>Awards & Certifications</h4></div>
+        <div class="card-body">
+          <div style="font-size:.82rem;color:var(--mut);margin-bottom:12px;">Add awards to boost customer confidence</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:10px 12px;font-size:.82rem;">🏆 Best Wedding Photographer — Hyd 2023</div>
+            <div style="display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:10px 12px;font-size:.82rem;">🎖️ Top 10 Photographers India — WedMeGood 2022</div>
+          </div>
+          <button class="btn btn-sc btn-sm" onclick="showToast('✏️ Add award form coming soon!')">+ Add Award</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SERVICES ════ -->
+<div class="page" id="pg-services">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+    <div></div>
+    <button class="btn btn-pr" onclick="showToast('➕ Add service form!')">+ Add New Service</button>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-head"><h4>Basic Wedding Photography</h4><span class="bdg bdg-gr">Active</span></div>
+      <div class="card-body">
+        <div style="font-size:1.6rem;font-weight:700;color:var(--saf);margin-bottom:8px;">₹45,000 <span style="font-size:.85rem;color:var(--mut);font-weight:400;">per event</span></div>
+        <div style="font-size:.82rem;color:var(--mut);margin-bottom:14px;line-height:1.7;">1 photographer, 8-hour coverage, 300+ edited photos, online gallery delivered in 7 days.</div>
+        <div class="fr"><div class="fg"><label class="fl">Price</label><input class="fi" value="45000" type="number"></div><div class="fg"><label class="fl">Per</label><select class="fi"><option>per event</option><option>per day</option><option>per hour</option></select></div></div>
+        <div style="display:flex;gap:8px;margin-top:8px;"><button class="btn btn-pr btn-sm" onclick="showToast('✅ Service updated!')">Save</button><button class="btn btn-sc btn-sm" onclick="showToast('⏸️ Service paused')">Pause</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h4>Cinematic Wedding Film</h4><span class="bdg bdg-gr">Active</span></div>
+      <div class="card-body">
+        <div style="font-size:1.6rem;font-weight:700;color:var(--saf);margin-bottom:8px;">₹75,000 <span style="font-size:.85rem;color:var(--mut);font-weight:400;">per event</span></div>
+        <div style="font-size:.82rem;color:var(--mut);margin-bottom:14px;line-height:1.7;">2 cameras, drone footage, 15-minute highlight film + full ceremony cut, delivered in 21 days.</div>
+        <div class="fr"><div class="fg"><label class="fl">Price</label><input class="fi" value="75000" type="number"></div><div class="fg"><label class="fl">Per</label><select class="fi"><option>per event</option><option>per day</option><option>per hour</option></select></div></div>
+        <div style="display:flex;gap:8px;margin-top:8px;"><button class="btn btn-pr btn-sm" onclick="showToast('✅ Service updated!')">Save</button><button class="btn btn-sc btn-sm" onclick="showToast('⏸️ Service paused')">Pause</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h4>Pre-Wedding Shoot</h4><span class="bdg bdg-or">Seasonal</span></div>
+      <div class="card-body">
+        <div style="font-size:1.6rem;font-weight:700;color:var(--saf);margin-bottom:8px;">₹18,000 <span style="font-size:.85rem;color:var(--mut);font-weight:400;">per session</span></div>
+        <div style="font-size:.82rem;color:var(--mut);margin-bottom:14px;line-height:1.7;">3-hour outdoor shoot, 2 outfit changes, 80+ edited photos. Outdoor location of your choice.</div>
+        <div class="fr"><div class="fg"><label class="fl">Price</label><input class="fi" value="18000" type="number"></div><div class="fg"><label class="fl">Per</label><select class="fi"><option selected>per session</option><option>per event</option><option>per day</option></select></div></div>
+        <div style="display:flex;gap:8px;margin-top:8px;"><button class="btn btn-pr btn-sm" onclick="showToast('✅ Service updated!')">Save</button><button class="btn btn-sc btn-sm" onclick="showToast('⏸️ Service paused')">Pause</button></div>
+      </div>
+    </div>
+    <div class="card" style="border:2px dashed var(--bdr);background:transparent;display:flex;align-items:center;justify-content:center;min-height:180px;cursor:pointer;transition:all .2s;" onclick="showToast('➕ New service form!')" onmouseover="this.style.borderColor='var(--saf)'" onmouseout="this.style.borderColor='var(--bdr)'">
+      <div style="text-align:center;color:var(--mut);"><div style="font-size:2rem;margin-bottom:8px;">➕</div><div style="font-size:.88rem;font-weight:600;">Add New Service</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PORTFOLIO ════ -->
+<div class="page" id="pg-portfolio">
+  <div class="info">🖼️ High quality portfolio photos help you get <strong>3x more bookings</strong>. Add at least 10 photos to unlock the Verified badge boost.</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+    <div style="font-size:.85rem;color:var(--mut);">8 / 10 photos uploaded</div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-sc btn-sm" onclick="showToast('🎬 Video upload ready!')">+ Add Video</button><button class="btn btn-pr btn-sm" onclick="showToast('🖼️ Photo upload ready!')">+ Upload Photos</button></div>
+  </div>
+  <div class="port-grid">
+    <div class="port-item filled">📸<div class="port-del" onclick="showToast('🗑️ Photo removed')">✕</div></div>
+    <div class="port-item filled" style="background:linear-gradient(135deg,#9C27B0,#E91E63);">💄<div class="port-del">✕</div></div>
+    <div class="port-item filled" style="background:linear-gradient(135deg,#1565C0,#00BCD4);">🎬<div class="port-del">✕</div></div>
+    <div class="port-item filled" style="background:linear-gradient(135deg,#2E7D32,#4CAF50);">🌸<div class="port-del">✕</div></div>
+    <div class="port-item filled" style="background:linear-gradient(135deg,#FF6B00,#FF3E00);">🎉<div class="port-del">✕</div></div>
+    <div class="port-item filled" style="background:linear-gradient(135deg,#1A0800,#3D1500);">💍<div class="port-del">✕</div></div>
+    <div class="port-item filled" style="background:linear-gradient(135deg,#880E4F,#C2185B);">💃<div class="port-del">✕</div></div>
+    <div class="port-item filled" style="background:linear-gradient(135deg,#004D40,#00796B);">🏛️<div class="port-del">✕</div></div>
+    <div class="port-item" onclick="showToast('🖼️ Photo upload ready!')">➕</div>
+    <div class="port-item" onclick="showToast('🖼️ Photo upload ready!')">➕</div>
+  </div>
+</div>
+
+<!-- ════ ANALYTICS ════ -->
+<div class="page" id="pg-analytics">
+  <div class="kpi-grid" style="margin-bottom:24px;">
+    <div class="kpi" style="--c:#1455A8"><div class="kpi-val">1,842</div><div class="kpi-label">Profile Views</div><div class="kpi-chg up">↑ 12% this week</div></div>
+    <div class="kpi" style="--c:#E8560A"><div class="kpi-val">24%</div><div class="kpi-label">Conversion Rate</div><div class="kpi-chg up">Views → Bookings</div></div>
+    <div class="kpi" style="--c:#1A8A45"><div class="kpi-val">4.2%</div><div class="kpi-label">Response Rate</div><div class="kpi-chg up">Inquiries → Accept</div></div>
+    <div class="kpi" style="--c:#E09800"><div class="kpi-val">#3</div><div class="kpi-label">Search Rank</div><div class="kpi-chg up">Photography · Hyd</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:24px;">
+    <div class="card">
+      <div class="card-head"><h4>Profile Views — Last 8 Months</h4></div>
+      <div class="card-body"><div class="chart-bars" id="viewsChart"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h4>Bookings by Event Type</h4></div>
+      <div class="card-body" id="eventTypeChart"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><h4>Top Search Keywords</h4></div>
+    <div class="card-body">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:.85rem;"><span>wedding photographer hyderabad</span><div style="display:flex;align-items:center;gap:10px;"><div class="stat-bar" style="width:180px;"><div class="stat-bar-fill" style="width:85%"></div></div><span style="font-weight:600;color:var(--saf);">420 views</span></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:.85rem;"><span>candid wedding photography</span><div style="display:flex;align-items:center;gap:10px;"><div class="stat-bar" style="width:180px;"><div class="stat-bar-fill" style="width:65%"></div></div><span style="font-weight:600;color:var(--saf);">310 views</span></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:.85rem;"><span>wedding videography hyderabad</span><div style="display:flex;align-items:center;gap:10px;"><div class="stat-bar" style="width:180px;"><div class="stat-bar-fill" style="width:50%"></div></div><span style="font-weight:600;color:var(--saf);">240 views</span></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:.85rem;"><span>pre wedding shoot banjara hills</span><div style="display:flex;align-items:center;gap:10px;"><div class="stat-bar" style="width:180px;"><div class="stat-bar-fill" style="width:30%"></div></div><span style="font-weight:600;color:var(--saf);">145 views</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ REVIEWS ════ -->
+<div class="page" id="pg-reviews">
+  <div class="g3" style="margin-bottom:20px;">
+    <div class="kpi" style="--c:#E09800"><div class="kpi-val">4.9 ★</div><div class="kpi-label">Overall Rating</div><div class="kpi-chg up">28 total reviews</div></div>
+    <div class="kpi" style="--c:#1A8A45"><div class="kpi-val">96%</div><div class="kpi-label">5-Star Reviews</div><div class="kpi-chg up">27 out of 28</div></div>
+    <div class="kpi" style="--c:#1455A8"><div class="kpi-val">100%</div><div class="kpi-label">Replied</div><div class="kpi-chg up">All reviews answered</div></div>
+  </div>
+  <div class="rv-card">
+    <div class="rv-top"><div class="rv-auth"><div class="rv-av">👩</div><div><div class="rv-nm">Priya Venkatesh</div><div class="rv-ev">💍 Wedding · 15 Jan 2025</div></div></div><div class="stars">★★★★★</div></div>
+    <div class="rv-txt">"Roshan and his team were absolutely phenomenal! Every candid shot was pure magic. Our wedding album brought tears to our eyes. Worth every rupee!"</div>
+    <div class="rv-reply"><strong>Your reply:</strong> Thank you so much, Priya! It was a pleasure capturing your special day. Wishing you both a lifetime of happiness! 🎊</div>
+  </div>
+  <div class="rv-card">
+    <div class="rv-top"><div class="rv-auth"><div class="rv-av">👨</div><div><div class="rv-nm">Karthik Reddy</div><div class="rv-ev">💒 Engagement · 28 Jan 2025</div></div></div><div class="stars">★★★★★</div></div>
+    <div class="rv-txt">"Delivered the album within 5 days! Outstanding quality and very professional team. The drone shots of our engagement were breathtaking!"</div>
+    <div style="margin-top:10px;"><button class="btn btn-sc btn-sm" onclick="showToast('✏️ Reply editor opened!')">Reply to this review</button></div>
+  </div>
+  <div class="rv-card">
+    <div class="rv-top"><div class="rv-auth"><div class="rv-av">👩</div><div><div class="rv-nm">Meera Nair</div><div class="rv-ev">🎂 Birthday · 5 Feb 2025</div></div></div><div class="stars">★★★★☆</div></div>
+    <div class="rv-txt">"Great photography overall. Team was a bit late by 30 minutes but compensated well. Photos came out beautiful!"</div>
+    <div style="margin-top:10px;"><button class="btn btn-sc btn-sm" onclick="showToast('✏️ Reply editor opened!')">Reply to this review</button></div>
+  </div>
+</div>
+
+<!-- ════ MESSAGES ════ -->
+<div class="page" id="pg-messages">
+  <div class="card">
+    <div style="display:grid;grid-template-columns:280px 1fr;">
+      <div class="chat-list">
+        <div style="padding:12px 14px;border-bottom:1px solid var(--bdr);font-size:.78rem;font-weight:700;color:var(--mut);background:var(--bg);">CONVERSATIONS</div>
+        <div class="chat-item on"><div class="ci-top"><span class="ci-name">Ananya Sharma</span><span class="ci-time">2m ago</span></div><div class="ci-msg" style="display:flex;gap:6px;align-items:center;"><span class="ci-dot"></span>Can you do engagement + wedding?</div></div>
+        <div class="chat-item"><div class="ci-top"><span class="ci-name">Rahul Mehta</span><span class="ci-time">1h ago</span></div><div class="ci-msg">What's your availability in March?</div></div>
+        <div class="chat-item"><div class="ci-top"><span class="ci-name">Priya Venkatesh</span><span class="ci-time">Yesterday</span></div><div class="ci-msg">Thank you so much! 🙏</div></div>
+        <div class="chat-item"><div class="ci-top"><span class="ci-name">Kiran & Sneha</span><span class="ci-time">2 days ago</span></div><div class="ci-msg">Album received! Beautiful work</div></div>
+        <div class="chat-item"><div class="ci-top"><span class="ci-name">Suresh Menon</span><span class="ci-time">3 days ago</span></div><div class="ci-msg">Can we schedule a call?</div></div>
+      </div>
+      <div class="chat-main">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--bdr);font-weight:600;font-size:.9rem;display:flex;align-items:center;gap:10px;">
+          <div class="rv-av" style="width:32px;height:32px;font-size:.85rem;">👩</div>Ananya Sharma
+          <span class="bdg bdg-or" style="margin-left:auto;">💍 Wedding Inquiry</span>
+        </div>
+        <div class="chat-msgs">
+          <div class="msg in">Hi! I saw your portfolio on Utsav and loved it. We're planning our wedding in March. Are you available?<div class="msg-time">10:30 AM</div></div>
+          <div class="msg out">Hello Ananya! Thank you for reaching out 😊 Yes, I have availability in March. Could you share the exact date?<div class="msg-time">10:35 AM</div></div>
+          <div class="msg in">It's 15th March 2025, at Taj Falaknuma Palace. Around 500 guests. Can you do both the engagement (14th) and wedding (15th)?<div class="msg-time">10:38 AM</div></div>
+          <div class="msg out">Absolutely! That's a beautiful venue 🏛️ I can cover both days. My Gold Package for 2-day coverage starts at ₹1,20,000. Shall I send you a detailed quote?<div class="msg-time">10:42 AM</div></div>
+          <div class="msg in">Yes please! Also, do you have drone coverage?<div class="msg-time">10:44 AM</div></div>
+        </div>
+        <div class="chat-input">
+          <input type="text" placeholder="Type a message...">
+          <button class="btn btn-pr" onclick="showToast('📤 Message sent!')">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ DOCUMENTS ════ -->
+<div class="page" id="pg-documents">
+  <div class="succ">✅ Your account is fully verified. All documents are approved and your profile is live on Utsav.in</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-head"><h4>Identity & Business Documents</h4></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg);border-radius:10px;"><div style="display:flex;align-items:center;gap:10px;font-size:.85rem;"><span>🪪</span><div><div style="font-weight:600;">Aadhaar Card</div><div style="font-size:.72rem;color:var(--mut);">Aadhaar_Kumar.pdf</div></div></div><span class="bdg bdg-gr">✅ Verified</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg);border-radius:10px;"><div style="display:flex;align-items:center;gap:10px;font-size:.85rem;"><span>📄</span><div><div style="font-weight:600;">PAN Card</div><div style="font-size:.72rem;color:var(--mut);">PAN_Kumar.jpg</div></div></div><span class="bdg bdg-gr">✅ Verified</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg);border-radius:10px;"><div style="display:flex;align-items:center;gap:10px;font-size:.85rem;"><span>🏦</span><div><div style="font-weight:600;">Bank Proof</div><div style="font-size:.72rem;color:var(--mut);">Bank_cheque.pdf</div></div></div><span class="bdg bdg-gr">✅ Verified</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg);border-radius:10px;"><div style="display:flex;align-items:center;gap:10px;font-size:.85rem;"><span>🖼️</span><div><div style="font-weight:600;">Portfolio Samples</div><div style="font-size:.72rem;color:var(--mut);">Portfolio_samples.zip (8 files)</div></div></div><span class="bdg bdg-gr">✅ Verified</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h4>Bank & Payout Details</h4></div>
+      <div class="card-body">
+        <div class="fg"><label class="fl">Account Holder Name</label><input class="fi" value="Roshan Kumar"></div>
+        <div class="fg"><label class="fl">Bank Account Number</label><input class="fi" value="**** **** 4521"></div>
+        <div class="fr"><div class="fg"><label class="fl">IFSC Code</label><input class="fi" value="HDFC0001234"></div><div class="fg"><label class="fl">Bank Name</label><input class="fi" value="HDFC Bank"></div></div>
+        <div class="fg"><label class="fl">UPI ID</label><input class="fi" value="roshan@hdfc"></div>
+        <button class="btn btn-pr" onclick="showToast('🏦 Bank details updated!')">Update Bank Details</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PROMOTIONS ════ -->
+<div class="page" id="pg-promotions">
+  <div class="info">🚀 Promotions help you appear at the top of search results and get more bookings during peak seasons.</div>
+  <div class="g2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-head"><h4>Active Discount Offers</h4><button class="btn btn-pr btn-sm" onclick="showToast('🏷️ Create offer form!')">+ Create Offer</button></div>
+      <div class="card-body">
+        <div style="background:linear-gradient(135deg,var(--saf)15,var(--gold)15);border:1.5px solid var(--gold);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-weight:700;font-size:.92rem;">💕 Valentine Special</div>
+            <span class="bdg bdg-gr">Active</span>
+          </div>
+          <div style="font-size:.82rem;color:var(--mut);">20% off pre-wedding shoots · Valid till 28 Feb 2025</div>
+          <div style="font-size:.78rem;color:var(--saf);margin-top:6px;font-weight:600;">Code: VDAY20 · Used 4 times</div>
+        </div>
+        <div style="background:var(--bg);border:1.5px solid var(--bdr);border-radius:12px;padding:14px;opacity:.6;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-weight:700;font-size:.92rem;">🪔 Diwali Offer</div>
+            <span class="bdg bdg-re">Expired</span>
+          </div>
+          <div style="font-size:.82rem;color:var(--mut);">15% off all packages · Oct–Nov 2024</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h4>Boost Profile Visibility</h4></div>
+      <div class="card-body">
+        <div class="warn">⚡ Boosted profiles get <strong>5x more views</strong> and appear at the top of search results during the boost period.</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="border:1.5px solid var(--bdr);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;" onclick="this.style.borderColor='var(--saf)'">
+            <div style="font-weight:700;margin-bottom:4px;">🚀 7-Day Boost — ₹499</div>
+            <div style="font-size:.78rem;color:var(--mut);">Top 3 position in your category for 7 days</div>
+          </div>
+          <div style="border:1.5px solid var(--saf);border-radius:12px;padding:14px;background:#FFF5EE;cursor:pointer;">
+            <div style="font-weight:700;margin-bottom:4px;">⚡ 30-Day Boost — ₹1,499 <span style="background:var(--saf);color:#fff;font-size:.65rem;padding:2px 8px;border-radius:8px;margin-left:6px;">Best Value</span></div>
+            <div style="font-size:.78rem;color:var(--mut);">Top 3 position for 30 days + Homepage feature slot</div>
+          </div>
+        </div>
+        <button class="btn btn-pr" style="width:100%;margin-top:14px;" onclick="showToast('💳 Payment page opened!')">Activate Boost</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><h4>Referral Program</h4></div>
+    <div class="card-body">
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
+        <div style="flex:1;min-width:200px;"><div style="font-size:.88rem;color:var(--mut);margin-bottom:8px;">Your referral code</div><div style="font-size:1.6rem;font-weight:700;color:var(--saf);letter-spacing:2px;">ROSHAN20</div><div style="font-size:.76rem;color:var(--mut);margin-top:4px;">Share this code with other vendors. Earn ₹500 for each successful referral.</div></div>
+        <div style="display:flex;gap:20px;text-align:center;">
+          <div><div style="font-size:1.4rem;font-weight:700;color:var(--saf);">3</div><div style="font-size:.74rem;color:var(--mut);">Referrals</div></div>
+          <div><div style="font-size:1.4rem;font-weight:700;color:var(--gr);">₹1,500</div><div style="font-size:.74rem;color:var(--mut);">Earned</div></div>
+        </div>
+        <button class="btn btn-pr" onclick="showToast('📋 Code copied to clipboard!')">Copy Code</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ NOTIFICATIONS ════ -->
+<div class="page" id="pg-notifications">
+  <div class="g2-3">
+    <div class="card">
+      <div class="card-head"><h4>Recent Notifications</h4><button class="btn btn-sc btn-sm" onclick="showToast('✅ All marked as read!')">Mark all read</button></div>
+      <div class="card-body" style="padding:0 20px;">
+        <div class="notif-item"><div class="ni-ic" style="--c:#FEF3E2;">📅</div><div style="flex:1;"><div class="ni-title">New booking request!</div><div class="ni-sub">Ananya Sharma requested Wedding Photography for 15 Mar 2025</div><div class="ni-time">2 minutes ago</div></div><div class="ni-unread"></div></div>
+        <div class="notif-item"><div class="ni-ic" style="--c:#E6F4EC;">💰</div><div style="flex:1;"><div class="ni-title">Payout processed</div><div class="ni-sub">₹22,500 transferred to HDFC ****4521 on 25 Jan 2025</div><div class="ni-time">5 days ago</div></div></div>
+        <div class="notif-item"><div class="ni-ic" style="--c:#FEF9E2;">⭐</div><div style="flex:1;"><div class="ni-title">New 5-star review!</div><div class="ni-sub">Priya Venkatesh left you a glowing review for her wedding</div><div class="ni-time">1 week ago</div></div><div class="ni-unread"></div></div>
+        <div class="notif-item"><div class="ni-ic" style="--c:#E8F0FD;">📈</div><div style="flex:1;"><div class="ni-title">Profile views spike</div><div class="ni-sub">Your profile views increased 40% this week. Keep it up!</div><div class="ni-time">3 days ago</div></div></div>
+        <div class="notif-item"><div class="ni-ic" style="--c:#FEE8E8;">⚠️</div><div style="flex:1;"><div class="ni-title">Upcoming event reminder</div><div class="ni-sub">Priya & Rahul's wedding is tomorrow (15 Feb). Venue: Taj Falaknuma</div><div class="ni-time">Yesterday</div></div></div>
+      </div>
+    </div>
+    <div class="card" style="height:fit-content;">
+      <div class="card-head"><h4>Notification Preferences</h4></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:.85rem;font-weight:600;">New Booking Requests</div><div style="font-size:.73rem;color:var(--mut);">SMS + WhatsApp + Email</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:.85rem;font-weight:600;">Payment Alerts</div><div style="font-size:.73rem;color:var(--mut);">SMS + Email</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:.85rem;font-weight:600;">New Reviews</div><div style="font-size:.73rem;color:var(--mut);">Email only</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:.85rem;font-weight:600;">Event Reminders</div><div style="font-size:.73rem;color:var(--mut);">SMS + WhatsApp</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:.85rem;font-weight:600;">Promotions & Offers</div><div style="font-size:.73rem;color:var(--mut);">Email only</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:.85rem;font-weight:600;">Platform Updates</div><div style="font-size:.73rem;color:var(--mut);">Email only</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SETTINGS ════ -->
+<div class="page" id="pg-settings">
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head"><h4>Account Security</h4></div>
+        <div class="card-body">
+          <div class="fg"><label class="fl">Current Password</label><input class="fi" type="password" placeholder="Enter current password"></div>
+          <div class="fg"><label class="fl">New Password</label><input class="fi" type="password" placeholder="Minimum 8 characters"></div>
+          <div class="fg"><label class="fl">Confirm New Password</label><input class="fi" type="password" placeholder="Repeat new password"></div>
+          <button class="btn btn-pr" onclick="showToast('🔒 Password updated!')">Update Password</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h4>Two-Factor Authentication</h4></div>
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div><div style="font-size:.88rem;font-weight:600;">2FA via WhatsApp OTP</div><div style="font-size:.75rem;color:var(--mut);">Extra security on login</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <button class="btn btn-sc btn-sm" onclick="showToast('📱 Test OTP sent to +91 98765 43210')">Send Test OTP</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head"><h4>Subscription Plan</h4></div>
+        <div class="card-body">
+          <div class="plan-crown" style="margin-bottom:12px;">👑 Growth Plan — ₹999/month</div>
+          <div style="font-size:.82rem;color:var(--mut);margin-bottom:14px;line-height:1.7;">Your plan renews on <strong>1 March 2025</strong>. You have priority ranking, verified badge, and full analytics.</div>
+          <div style="display:flex;gap:8px;"><button class="btn btn-pr btn-sm" onclick="showToast('💎 Upgrade to Premium!')">Upgrade to Premium</button><button class="btn btn-sc btn-sm" onclick="showToast('📋 Plan comparison shown!')">Compare Plans</button></div>
+        </div>
+      </div>
+      <div class="card" style="border:1.5px solid var(--red);">
+        <div class="card-head"><h4 style="color:var(--red);">Danger Zone</h4></div>
+        <div class="card-body">
+          <div style="font-size:.82rem;color:var(--mut);margin-bottom:12px;line-height:1.7;">These actions are permanent. Please be certain before proceeding.</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <button class="btn btn-sc btn-sm" onclick="showToast('⏸️ Listing paused. You won't receive new requests.')">Pause My Listing</button>
+            <button class="btn btn-re btn-sm" onclick="showToast('⚠️ Are you sure? This action cannot be undone!')">Delete Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SUPPORT ════ -->
+<div class="page" id="pg-support">
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head"><h4>Raise a Support Ticket</h4></div>
+        <div class="card-body">
+          <div class="fg"><label class="fl">Issue Category</label><select class="fi"><option>Payment / Payout Issue</option><option>Booking Dispute</option><option>Customer Complaint</option><option>Document Verification</option><option>Technical Issue</option><option>Account Access</option><option>Other</option></select></div>
+          <div class="fg"><label class="fl">Subject</label><input class="fi" placeholder="Brief summary of your issue"></div>
+          <div class="fg"><label class="fl">Description</label><textarea class="fi" rows="4" placeholder="Describe your issue in detail..."></textarea></div>
+          <button class="btn btn-pr" onclick="showToast('🎫 Ticket #TK-2045 raised! We\'ll respond within 24 hours.')">Submit Ticket</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h4>My Tickets</h4></div>
+        <div class="card-body" style="padding:0;">
+          <table class="tbl"><thead><tr><th>Ticket ID</th><th>Subject</th><th>Status</th><th></th></tr></thead><tbody>
+            <tr><td>#TK-2044</td><td>Payout delay Jan</td><td><span class="bdg bdg-gr">Resolved</span></td><td><button class="btn btn-sc btn-sm">View</button></td></tr>
+            <tr><td>#TK-2031</td><td>Photo upload error</td><td><span class="bdg bdg-gr">Resolved</span></td><td><button class="btn btn-sc btn-sm">View</button></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head"><h4>Quick Help</h4></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:var(--bg);border-radius:10px;padding:12px 14px;cursor:pointer;font-size:.84rem;font-weight:600;transition:background .2s;" onclick="showToast('📖 FAQ opened!')">📋 How do payouts work?</div>
+            <div style="background:var(--bg);border-radius:10px;padding:12px 14px;cursor:pointer;font-size:.84rem;font-weight:600;" onclick="showToast('📖 FAQ opened!')">🔒 How is my data protected?</div>
+            <div style="background:var(--bg);border-radius:10px;padding:12px 14px;cursor:pointer;font-size:.84rem;font-weight:600;" onclick="showToast('📖 FAQ opened!')">📈 How can I improve my ranking?</div>
+            <div style="background:var(--bg);border-radius:10px;padding:12px 14px;cursor:pointer;font-size:.84rem;font-weight:600;" onclick="showToast('📖 FAQ opened!')">❌ How to cancel a booking?</div>
+            <div style="background:var(--bg);border-radius:10px;padding:12px 14px;cursor:pointer;font-size:.84rem;font-weight:600;" onclick="showToast('📖 FAQ opened!')">📄 Document re-verification?</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background:linear-gradient(135deg,var(--dark),var(--dk2));border:none;">
+        <div class="card-body" style="text-align:center;padding:24px;">
+          <div style="font-size:2rem;margin-bottom:10px;">🤝</div>
+          <div style="font-family:'Yeseva One',serif;font-size:1.1rem;color:#FF8C3A;margin-bottom:6px;">Dedicated Account Manager</div>
+          <div style="font-size:.8rem;color:#C9A87C;margin-bottom:14px;line-height:1.7;">Available on Premium plan. Get a dedicated manager who handles everything for you.</div>
+          <div style="font-size:.82rem;color:#C9A87C;margin-bottom:8px;">📞 1800-XXX-UTSAV (Mon–Sat, 9AM–8PM)</div>
+          <div style="font-size:.82rem;color:#C9A87C;">📧 partner@utsav.in</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ── NAVIGATION ──
+const titles={
+  'pg-home':['Dashboard','Welcome back, Roshan 👋'],
+  'pg-bookings':['Bookings','Manage your event bookings'],
+  'pg-calendar':['Calendar','Your availability & schedule'],
+  'pg-revenue':['Revenue & Payouts','Track your earnings'],
+  'pg-profile':['My Profile','Edit your public profile'],
+  'pg-services':['Services & Pricing','Manage your packages'],
+  'pg-portfolio':['Portfolio','Showcase your best work'],
+  'pg-analytics':['Analytics','Profile & booking insights'],
+  'pg-reviews':['Reviews & Ratings','What customers say'],
+  'pg-messages':['Messages','Customer conversations'],
+  'pg-documents':['Documents & KYC','Verification status'],
+  'pg-promotions':['Promotions','Boost your visibility'],
+  'pg-notifications':['Notifications','Alerts & preferences'],
+  'pg-settings':['Settings','Account & security'],
+  'pg-support':['Support','Help & tickets'],
+};
+
+function nav(el,pgId){
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('on'));
+  if(el) el.classList.add('on');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const pg=document.getElementById(pgId);
+  if(pg) pg.classList.add('on');
+  if(titles[pgId]){
+    document.getElementById('tb-title').textContent=titles[pgId][0];
+    document.getElementById('tb-sub').textContent=titles[pgId][1];
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<768) closeSB();
+}
+
+// ── SIDEBAR ──
+function toggleSB(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('ovlBg').classList.toggle('on');
+}
+function closeSB(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('ovlBg').classList.remove('on');
+}
+
+// ── TABS ──
+function showTab(prefix,id,btn){
+  document.querySelectorAll(`[id^="${prefix}-"]`).forEach(t=>t.style.display='none');
+  const el=document.getElementById(`${prefix}-${id}`);
+  if(el) el.style.display='block';
+}
+
+// ── TOAST ──
+function showToast(msg){
+  const t=document.createElement('div');
+  t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3200);
+}
+
+// ── CHARTS ──
+function buildBarChart(id,data){
+  const el=document.getElementById(id);if(!el)return;
+  const max=Math.max(...data.map(d=>d.v));
+  el.innerHTML=data.map(d=>`
+    <div class="bar-wrap">
+      <div class="bar-val">${d.l2||''}</div>
+      <div class="bar" style="height:${Math.round((d.v/max)*100)}px;"></div>
+      <div class="bar-lbl">${d.l}</div>
+    </div>`).join('');
+}
+
+function buildEventChart(){
+  const el=document.getElementById('eventTypeChart');if(!el)return;
+  const data=[{l:'💍 Wedding',v:60,c:'var(--saf)'},{l:'💒 Engage',v:15,c:'#E91E63'},{l:'🎂 Birthday',v:12,c:'var(--gold)'},{l:'🍼 Cradle',v:8,c:'#1565C0'},{l:'Other',v:5,c:'var(--gr)'}];
+  el.innerHTML=data.map(d=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:90px;font-size:.78rem;">${d.l}</div><div style="flex:1;height:22px;background:var(--bdr);border-radius:5px;overflow:hidden;"><div style="height:100%;width:${d.v}%;background:${d.c};border-radius:5px;"></div></div><div style="width:30px;font-size:.76rem;font-weight:600;color:${d.c}">${d.v}%</div></div>`).join('');
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded',()=>{
+  buildBarChart('earningsChart',[
+    {l:'Aug',v:18000,l2:'₹18K'},{l:'Sep',v:22000,l2:'₹22K'},{l:'Oct',v:35000,l2:'₹35K'},
+    {l:'Nov',v:28000,l2:'₹28K'},{l:'Dec',v:42000,l2:'₹42K'},{l:'Jan',v:31000,l2:'₹31K'},
+    {l:'Feb',v:28000,l2:'₹28K'},{l:'Mar',v:15000,l2:'₹15K'}
+  ]);
+  buildBarChart('viewsChart',[
+    {l:'Aug',v:280},{l:'Sep',v:340},{l:'Oct',v:520},{l:'Nov',v:480},
+    {l:'Dec',v:680},{l:'Jan',v:590},{l:'Feb',v:840},{l:'Mar',v:420}
+  ]);
+  buildEventChart();
+});
+</script>
+</body>
+</html>

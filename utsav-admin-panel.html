@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utsav Admin — Vendor Approval Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--sf:#E8560A;--dr:#B03020;--mg:#E09800;--iv:#FFF8EE;--dk:#1A0A00;--mut:#7A5F37;--grn:#1E9050;--red:#C0302A;--blue:#185FA5;--purple:#534AB7;--bdr:#E8D5B7;--bg:#F5F0E8;--card:#FFFFFF;--sbw:220px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--dk);display:flex;min-height:100vh}
+/* SIDEBAR */
+.sb{width:var(--sbw);background:#1A0A00;position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:100}
+.sb-logo{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.sb-logo h2{font-family:'Yeseva One',serif;color:#FF8C3A;font-size:1.2rem}
+.sb-logo span{font-size:0.68rem;color:#C9A87C;display:block;margin-top:1px}
+.admin-info{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:8px}
+.admin-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--sf),var(--dr));display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:white;font-weight:700;flex-shrink:0}
+.admin-name{font-size:0.8rem;font-weight:600;color:white}
+.admin-role{font-size:0.68rem;color:#C9A87C}
+.ns{padding:10px 16px 3px;font-size:0.62rem;color:#666;text-transform:uppercase;letter-spacing:1px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 16px;cursor:pointer;color:#C9A87C;font-size:0.82rem;border-left:2px solid transparent;transition:all 0.15s;text-decoration:none}
+.ni:hover{background:rgba(255,255,255,0.04);color:white}
+.ni.act{background:rgba(255,107,0,0.1);color:#FF8C3A;border-left-color:#FF8C3A}
+.ni-ic{font-size:1rem;width:18px;text-align:center}
+.nb{margin-left:auto;background:var(--sf);color:white;border-radius:8px;padding:1px 7px;font-size:0.65rem;font-weight:700}
+.nb.blue{background:var(--blue)}
+/* MAIN */
+.main{margin-left:var(--sbw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:white;border-bottom:1.5px solid var(--bdr);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.tb-title{font-family:'Yeseva One',serif;font-size:1.2rem}
+.tb-right{display:flex;align-items:center;gap:12px}
+.search-box{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--bdr);border-radius:20px;padding:5px 12px}
+.search-box input{border:none;background:transparent;outline:none;font-size:0.8rem;font-family:'Poppins',sans-serif;width:180px;color:var(--dk)}
+.content{padding:20px 24px;flex:1}
+.page{display:none}
+.page.act{display:block}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.sc{background:white;border-radius:12px;padding:14px;border:1px solid var(--bdr)}
+.sc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.sc-ic{font-size:1.4rem}
+.sc-badge{font-size:0.68rem;font-weight:600;padding:2px 6px;border-radius:8px}
+.up{background:#E8F8F0;color:var(--grn)}
+.dn{background:#FDEDEC;color:var(--red)}
+.sc-val{font-size:1.4rem;font-weight:700;color:var(--dk);margin-bottom:2px}
+.sc-lbl{font-size:0.7rem;color:var(--mut)}
+/* FILTERS ROW */
+.filter-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.fpill{padding:6px 16px;border-radius:20px;border:1px solid var(--bdr);font-size:0.78rem;cursor:pointer;color:var(--mut);transition:all 0.15s;background:white;font-family:'Poppins',sans-serif}
+.fpill.act{background:var(--sf);border-color:var(--sf);color:white}
+.fpill:hover:not(.act){border-color:var(--sf);color:var(--sf)}
+.filter-right{margin-left:auto;display:flex;gap:8px}
+.sort-sel{padding:6px 12px;border-radius:8px;border:1px solid var(--bdr);font-size:0.78rem;font-family:'Poppins',sans-serif;background:white;color:var(--dk);outline:none}
+/* TABLE */
+.table-card{background:white;border-radius:14px;border:1px solid var(--bdr);overflow:hidden}
+.tc-head{padding:14px 20px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center}
+.tc-head h3{font-size:0.95rem;font-weight:600}
+.tc-count{font-size:0.75rem;color:var(--mut)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 16px;font-size:0.68rem;color:var(--mut);border-bottom:1px solid var(--bdr);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
+td{padding:12px 16px;font-size:0.8rem;border-bottom:1px solid #F5F0E8;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FFFAF5}
+.vendor-cell{display:flex;align-items:center;gap:10px}
+.v-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:white;flex-shrink:0}
+.v-name{font-weight:600;font-size:0.85rem;color:var(--dk)}
+.v-cat{font-size:0.7rem;color:var(--mut)}
+/* STATUS PILLS */
+.sp{padding:3px 10px;border-radius:10px;font-size:0.68rem;font-weight:600;white-space:nowrap}
+.sp.pending{background:#FFF3E0;color:var(--sf)}
+.sp.approved{background:#E8F8F0;color:var(--grn)}
+.sp.rejected{background:#FDEDEC;color:var(--red)}
+.sp.review{background:#EBF3FC;color:var(--blue)}
+.sp.suspended{background:#F5F0FF;color:var(--purple)}
+/* ACTION BTNS */
+.act-btns{display:flex;gap:6px}
+.ab{padding:5px 12px;border-radius:7px;font-size:0.72rem;font-weight:600;cursor:pointer;border:none;font-family:'Poppins',sans-serif;transition:all 0.15s}
+.ab-view{background:var(--iv);color:var(--dk);border:1px solid var(--bdr)}
+.ab-approve{background:var(--grn);color:white}
+.ab-reject{background:white;color:var(--red);border:1px solid var(--red)}
+.ab-view:hover{border-color:var(--sf);color:var(--sf)}
+.ab-approve:hover{opacity:0.85}
+.ab-reject:hover{background:var(--red);color:white}
+/* DETAIL PANEL (slide-in) */
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:none;justify-content:flex-end}
+.detail-overlay.open{display:flex}
+.detail-panel{width:520px;background:white;height:100%;overflow-y:auto;display:flex;flex-direction:column}
+.dp-head{padding:18px 20px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:10}
+.dp-head h3{font-family:'Yeseva One',serif;font-size:1.1rem}
+.dp-close{width:28px;height:28px;border-radius:50%;background:var(--iv);border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dp-body{padding:20px;flex:1}
+.dp-vendor-hero{background:#1A0A00;border-radius:12px;padding:16px;display:flex;gap:14px;align-items:center;margin-bottom:16px}
+.dp-av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--sf),var(--dr));display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:white;font-weight:700;flex-shrink:0}
+.dp-vname{font-weight:700;font-size:1rem;color:white;margin-bottom:2px}
+.dp-vcats{font-size:0.72rem;color:#C9A87C}
+.dp-section{margin-bottom:16px}
+.dp-section h4{font-size:0.78rem;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--bdr)}
+.dp-row{display:flex;justify-content:space-between;padding:5px 0;font-size:0.8rem;border-bottom:1px solid #F5F0E8}
+.dp-row:last-child{border-bottom:none}
+.dp-lbl{color:var(--mut)}
+.dp-val{font-weight:600;color:var(--dk);text-align:right}
+.doc-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--bdr);border-radius:8px;margin-bottom:6px}
+.doc-status{font-size:0.72rem;font-weight:600;margin-left:auto}
+.doc-status.ok{color:var(--grn)}
+.doc-status.missing{color:var(--red)}
+.svc-chip{display:inline-block;padding:4px 10px;background:var(--iv);border:1px solid var(--bdr);border-radius:8px;font-size:0.72rem;margin:3px;color:var(--dk)}
+.dp-footer{padding:16px 20px;border-top:1px solid var(--bdr);position:sticky;bottom:0;background:white}
+.dp-actions{display:flex;gap:10px;margin-bottom:10px}
+.dp-approve{flex:1;padding:10px;background:var(--grn);color:white;border:none;border-radius:10px;font-weight:600;font-size:0.88rem;cursor:pointer;font-family:'Poppins',sans-serif;transition:opacity 0.2s}
+.dp-approve:hover{opacity:0.85}
+.dp-reject-btn{flex:1;padding:10px;background:white;color:var(--red);border:1.5px solid var(--red);border-radius:10px;font-weight:600;font-size:0.88rem;cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.2s}
+.dp-reject-btn:hover{background:var(--red);color:white}
+.dp-note{width:100%;padding:8px 12px;border:1px solid var(--bdr);border-radius:8px;font-size:0.8rem;font-family:'Poppins',sans-serif;resize:none;outline:none}
+.dp-note:focus{border-color:var(--sf)}
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:#1A0A00;color:white;padding:10px 18px;border-radius:10px;font-size:0.82rem;font-weight:500;z-index:9999;transform:translateX(130%);transition:transform 0.3s}
+.toast.show{transform:translateX(0)}
+/* ANALYTICS PAGE */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.chart-card{background:white;border-radius:12px;border:1px solid var(--bdr);padding:16px}
+.chart-title{font-size:0.88rem;font-weight:600;margin-bottom:14px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px}
+.bc-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bc-bar{width:100%;border-radius:4px 4px 0 0;transition:height 0.4s}
+.bc-lbl{font-size:0.62rem;color:var(--mut)}
+.bc-val{font-size:0.6rem;color:var(--dk);font-weight:600}
+.cat-breakdown{display:flex;flex-direction:column;gap:6px}
+.cb-row{display:flex;align-items:center;gap:8px;font-size:0.78rem}
+.cb-ic{width:20px;text-align:center}
+.cb-lbl{flex:1;color:var(--dk)}
+.cb-bar-bg{width:120px;height:6px;background:var(--iv);border-radius:3px;overflow:hidden}
+.cb-bar-fill{height:100%;background:var(--sf);border-radius:3px}
+.cb-pct{font-size:0.72rem;color:var(--mut);width:28px;text-align:right}
+/* CITY TABLE */
+.city-table{width:100%;border-collapse:collapse;font-size:0.78rem}
+.city-table td{padding:7px 0;border-bottom:1px solid var(--iv)}
+.city-table td:last-child{text-align:right;font-weight:600;color:var(--sf)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sb">
+  <div class="sb-logo">
+    <h2>🪔 Utsav Admin</h2>
+    <span>Vendor Management Panel</span>
+  </div>
+  <div class="admin-info">
+    <div class="admin-av">A</div>
+    <div><div class="admin-name">Admin User</div><div class="admin-role">Super Admin</div></div>
+  </div>
+  <div class="ns">Review Queue</div>
+  <div class="ni act" onclick="gp('approvals',this)"><span class="ni-ic">🔔</span>Pending Approvals<span class="nb">7</span></div>
+  <div class="ni" onclick="gp('all',this)"><span class="ni-ic">📋</span>All Vendors</div>
+  <div class="ns">Manage</div>
+  <div class="ni" onclick="gp('approved',this)"><span class="ni-ic">✅</span>Approved Vendors</div>
+  <div class="ni" onclick="gp('rejected',this)"><span class="ni-ic">❌</span>Rejected</div>
+  <div class="ni" onclick="gp('suspended',this)"><span class="ni-ic">⏸️</span>Suspended</div>
+  <div class="ns">Insights</div>
+  <div class="ni" onclick="gp('analytics',this)"><span class="ni-ic">📊</span>Analytics</div>
+  <div class="ns">Settings</div>
+  <div class="ni" onclick="gp('settings',this)"><span class="ni-ic">⚙️</span>Platform Settings</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title" id="ptitle">Pending Approvals</div>
+    <div class="tb-right">
+      <div class="search-box">🔍 <input type="text" placeholder="Search vendors..."></div>
+      <div style="font-size:0.75rem;color:var(--mut)">Mon, 20 Apr 2026</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── PENDING APPROVALS ── -->
+    <div class="page act" id="pg-approvals">
+      <div class="stats">
+        <div class="sc"><div class="sc-top"><span class="sc-ic">⏳</span><span class="sc-badge" style="background:#FFF3E0;color:var(--sf)">Live</span></div><div class="sc-val">7</div><div class="sc-lbl">Awaiting review</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">⏱️</span></div><div class="sc-val">14h</div><div class="sc-lbl">Avg review time</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">✅</span><span class="sc-badge up">+12%</span></div><div class="sc-val">143</div><div class="sc-lbl">Approved this month</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">❌</span><span class="sc-badge dn">+3%</span></div><div class="sc-val">18</div><div class="sc-lbl">Rejected this month</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">📈</span><span class="sc-badge up">+8%</span></div><div class="sc-val">89%</div><div class="sc-lbl">Approval rate</div></div>
+      </div>
+
+      <div class="filter-row">
+        <button class="fpill act" onclick="setFilter(this)">All (7)</button>
+        <button class="fpill" onclick="setFilter(this)">Photography (2)</button>
+        <button class="fpill" onclick="setFilter(this)">Catering (2)</button>
+        <button class="fpill" onclick="setFilter(this)">Decoration (1)</button>
+        <button class="fpill" onclick="setFilter(this)">Makeup (1)</button>
+        <button class="fpill" onclick="setFilter(this)">Other (1)</button>
+        <div class="filter-right"><select class="sort-sel"><option>Newest first</option><option>Oldest first</option><option>City A–Z</option></select></div>
+      </div>
+
+      <div class="table-card">
+        <div class="tc-head"><h3>Vendors awaiting approval</h3><span class="tc-count">7 applications</span></div>
+        <table>
+          <thead><tr><th>Vendor</th><th>Category</th><th>City</th><th>Plan</th><th>Applied</th><th>Docs</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="pending-tbody">
+            <tr data-id="1">
+              <td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#E8560A,#B03020)">R</div><div><div class="v-name">Roshan Photography</div><div class="v-cat">+91 98765 43210</div></div></div></td>
+              <td>📸 Photography</td><td>Hyderabad</td><td><span class="sp review">Growth</span></td><td>2h ago</td>
+              <td><span style="color:var(--grn);font-weight:600;font-size:0.78rem">✅ All docs</span></td>
+              <td><span class="sp pending">Pending</span></td>
+              <td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(1)">View</button><button class="ab ab-approve" onclick="approveVendor(1,this)">Approve</button><button class="ab ab-reject" onclick="rejectVendor(1,this)">Reject</button></div></td>
+            </tr>
+            <tr data-id="2">
+              <td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#1565C0,#0097A7)">S</div><div><div class="v-name">Saffron Kitchen</div><div class="v-cat">+91 87654 32109</div></div></div></td>
+              <td>🍽️ Catering</td><td>Mumbai</td><td><span class="sp review">Starter</span></td><td>5h ago</td>
+              <td><span style="color:var(--red);font-weight:600;font-size:0.78rem">⚠️ PAN missing</span></td>
+              <td><span class="sp review">Doc Review</span></td>
+              <td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(2)">View</button><button class="ab ab-approve" onclick="approveVendor(2,this)">Approve</button><button class="ab ab-reject" onclick="rejectVendor(2,this)">Reject</button></div></td>
+            </tr>
+            <tr data-id="3">
+              <td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#E91E63,#9C27B0)">A</div><div><div class="v-name">Ayesha Bridal Studio</div><div class="v-cat">+91 76543 21098</div></div></div></td>
+              <td>💄 Bridal Makeup</td><td>Bangalore</td><td><span class="sp" style="background:#F0E6FF;color:#534AB7">Premium</span></td><td>8h ago</td>
+              <td><span style="color:var(--grn);font-weight:600;font-size:0.78rem">✅ All docs</span></td>
+              <td><span class="sp pending">Pending</span></td>
+              <td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(3)">View</button><button class="ab ab-approve" onclick="approveVendor(3,this)">Approve</button><button class="ab ab-reject" onclick="rejectVendor(3,this)">Reject</button></div></td>
+            </tr>
+            <tr data-id="4">
+              <td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#2E7D32,#00796B)">M</div><div><div class="v-name">Meenakshi Decorators</div><div class="v-cat">+91 65432 10987</div></div></div></td>
+              <td>🌸 Decoration</td><td>Chennai</td><td><span class="sp review">Growth</span></td><td>12h ago</td>
+              <td><span style="color:var(--grn);font-weight:600;font-size:0.78rem">✅ All docs</span></td>
+              <td><span class="sp pending">Pending</span></td>
+              <td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(4)">View</button><button class="ab ab-approve" onclick="approveVendor(4,this)">Approve</button><button class="ab ab-reject" onclick="rejectVendor(4,this)">Reject</button></div></td>
+            </tr>
+            <tr data-id="5">
+              <td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#F4A300,#E8560A)">V</div><div><div class="v-name">Vijay Tent House</div><div class="v-cat">+91 54321 09876</div></div></div></td>
+              <td>⛺ Tent House</td><td>Jaipur</td><td><span class="sp review">Starter</span></td><td>1d ago</td>
+              <td><span style="color:var(--red);font-weight:600;font-size:0.78rem">⚠️ Portfolio missing</span></td>
+              <td><span class="sp review">Doc Review</span></td>
+              <td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(5)">View</button><button class="ab ab-approve" onclick="approveVendor(5,this)">Approve</button><button class="ab ab-reject" onclick="rejectVendor(5,this)">Reject</button></div></td>
+            </tr>
+            <tr data-id="6">
+              <td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#BF360C,#E65100)">P</div><div><div class="v-name">Pt. Ramesh Sharma</div><div class="v-cat">+91 43210 98765</div></div></div></td>
+              <td>🙏 Pandit Ji</td><td>Delhi NCR</td><td><span class="sp review">Starter</span></td><td>1d ago</td>
+              <td><span style="color:var(--grn);font-weight:600;font-size:0.78rem">✅ All docs</span></td>
+              <td><span class="sp pending">Pending</span></td>
+              <td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(6)">View</button><button class="ab ab-approve" onclick="approveVendor(6,this)">Approve</button><button class="ab ab-reject" onclick="rejectVendor(6,this)">Reject</button></div></td>
+            </tr>
+            <tr data-id="7">
+              <td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#1A237E,#283593)">H</div><div><div class="v-name">Harmony Music Band</div><div class="v-cat">+91 32109 87654</div></div></div></td>
+              <td>🎺 Brass Band</td><td>Pune</td><td><span class="sp" style="background:#F0E6FF;color:#534AB7">Premium</span></td><td>2d ago</td>
+              <td><span style="color:var(--grn);font-weight:600;font-size:0.78rem">✅ All docs</span></td>
+              <td><span class="sp pending">Pending</span></td>
+              <td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(7)">View</button><button class="ab ab-approve" onclick="approveVendor(7,this)">Approve</button><button class="ab ab-reject" onclick="rejectVendor(7,this)">Reject</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ALL VENDORS ── -->
+    <div class="page" id="pg-all">
+      <div class="stats">
+        <div class="sc"><div class="sc-top"><span class="sc-ic">🏪</span><span class="sc-badge up">+23%</span></div><div class="sc-val">5,248</div><div class="sc-lbl">Total vendors</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">✅</span></div><div class="sc-val">4,891</div><div class="sc-lbl">Active & live</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">⏳</span></div><div class="sc-val">7</div><div class="sc-lbl">Pending review</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">⏸️</span></div><div class="sc-val">62</div><div class="sc-lbl">Suspended</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">⭐</span></div><div class="sc-val">4.7</div><div class="sc-lbl">Platform avg rating</div></div>
+      </div>
+      <div class="table-card">
+        <div class="tc-head"><h3>All registered vendors</h3><span class="tc-count">5,248 vendors</span></div>
+        <table>
+          <thead><tr><th>Vendor</th><th>Category</th><th>City</th><th>Plan</th><th>Rating</th><th>Bookings</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#E8560A,#B03020)">R</div><div><div class="v-name">Royal Blooms Decor</div><div class="v-cat">Hyderabad</div></div></div></td><td>🌸 Decoration</td><td>Hyderabad</td><td><span class="sp" style="background:#F0E6FF;color:#534AB7">Premium</span></td><td>⭐ 4.9</td><td>210</td><td><span class="sp approved">Live</span></td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(1)">View</button><button class="ab" style="background:#FFF3E0;color:var(--sf);border:1px solid var(--bdr)" onclick="toast('⏸️ Vendor suspended!')">Suspend</button></div></td></tr>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#2E7D32,#00796B)">G</div><div><div class="v-name">Grand Feast Caterers</div><div class="v-cat">Secunderabad</div></div></div></td><td>🍽️ Catering</td><td>Hyderabad</td><td><span class="sp review">Growth</span></td><td>⭐ 4.7</td><td>600</td><td><span class="sp approved">Live</span></td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(1)">View</button><button class="ab" style="background:#FFF3E0;color:var(--sf);border:1px solid var(--bdr)" onclick="toast('⏸️ Vendor suspended!')">Suspend</button></div></td></tr>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#E91E63,#9C27B0)">A</div><div><div class="v-name">Ayesha Bridal Studio</div><div class="v-cat">Madhapur</div></div></div></td><td>💄 Makeup</td><td>Hyderabad</td><td><span class="sp" style="background:#F0E6FF;color:#534AB7">Premium</span></td><td>⭐ 4.9</td><td>480</td><td><span class="sp approved">Live</span></td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(3)">View</button><button class="ab" style="background:#FFF3E0;color:var(--sf);border:1px solid var(--bdr)" onclick="toast('⏸️ Vendor suspended!')">Suspend</button></div></td></tr>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#1565C0,#0097A7)">D</div><div><div class="v-name">DJ Siddharth Events</div><div class="v-cat">Gachibowli</div></div></div></td><td>🎵 DJ / Music</td><td>Hyderabad</td><td><span class="sp review">Growth</span></td><td>⭐ 4.6</td><td>290</td><td><span class="sp approved">Live</span></td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(1)">View</button><button class="ab" style="background:#FFF3E0;color:var(--sf);border:1px solid var(--bdr)" onclick="toast('⏸️ Vendor suspended!')">Suspend</button></div></td></tr>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#BF360C,#E65100)">K</div><div><div class="v-name">Kumar Tent Works</div><div class="v-cat">Jaipur</div></div></div></td><td>⛺ Tent House</td><td>Jaipur</td><td><span class="sp review">Starter</span></td><td>⭐ 4.2</td><td>45</td><td><span class="sp suspended">Suspended</span></td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(5)">View</button><button class="ab ab-approve" onclick="toast('✅ Vendor reinstated!')">Reinstate</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── APPROVED ── -->
+    <div class="page" id="pg-approved">
+      <div class="stats">
+        <div class="sc"><div class="sc-top"><span class="sc-ic">✅</span></div><div class="sc-val">4,891</div><div class="sc-lbl">Live vendors</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">📅</span><span class="sc-badge up">+12%</span></div><div class="sc-val">143</div><div class="sc-lbl">Approved this month</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">⭐</span></div><div class="sc-val">4.7</div><div class="sc-lbl">Avg rating</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">💰</span><span class="sc-badge up">+18%</span></div><div class="sc-val">₹9.2Cr</div><div class="sc-lbl">GMV this month</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">📊</span></div><div class="sc-val">68%</div><div class="sc-lbl">Active this week</div></div>
+      </div>
+      <div class="table-card">
+        <div class="tc-head"><h3>Approved & live vendors</h3><span class="tc-count">4,891 vendors</span></div>
+        <table>
+          <thead><tr><th>Vendor</th><th>Category</th><th>City</th><th>Approved on</th><th>Total bookings</th><th>Revenue</th><th>Rating</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#E8560A,#B03020)">R</div><div><div class="v-name">Roshan Photography</div><div class="v-cat">Hyderabad</div></div></div></td><td>📸 Photography</td><td>Hyderabad</td><td>1 Apr 2026</td><td>340</td><td class="sp approved" style="display:inline-block">₹48L</td><td>⭐ 4.9</td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(1)">View</button></div></td></tr>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#2E7D32,#00796B)">G</div><div><div class="v-name">Grand Feast Caterers</div><div class="v-cat">Hyderabad</div></div></div></td><td>🍽️ Catering</td><td>Hyderabad</td><td>12 Mar 2026</td><td>600</td><td class="sp approved" style="display:inline-block">₹72L</td><td>⭐ 4.7</td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(1)">View</button></div></td></tr>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:linear-gradient(135deg,#E91E63,#9C27B0)">A</div><div><div class="v-name">Ayesha Bridal Studio</div><div class="v-cat">Bangalore</div></div></div></td><td>💄 Makeup</td><td>Bangalore</td><td>5 Feb 2026</td><td>480</td><td class="sp approved" style="display:inline-block">₹38L</td><td>⭐ 4.9</td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(3)">View</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── REJECTED ── -->
+    <div class="page" id="pg-rejected">
+      <div class="table-card">
+        <div class="tc-head"><h3>Rejected applications</h3><span class="tc-count">18 this month</span></div>
+        <table>
+          <thead><tr><th>Vendor</th><th>Category</th><th>City</th><th>Rejected on</th><th>Reason</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:#888">X</div><div><div class="v-name">Xyz Event Co.</div><div class="v-cat">Kolkata</div></div></div></td><td>📸 Photography</td><td>Kolkata</td><td>18 Apr 2026</td><td><span class="sp rejected">Fake documents</span></td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(1)">View</button><button class="ab ab-approve" onclick="toast('Application moved back to review!')">Re-review</button></div></td></tr>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:#888">Q</div><div><div class="v-name">Quick Events</div><div class="v-cat">Surat</div></div></div></td><td>🌸 Decoration</td><td>Surat</td><td>15 Apr 2026</td><td><span class="sp rejected">Incomplete portfolio</span></td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(1)">View</button><button class="ab ab-approve" onclick="toast('Application moved back to review!')">Re-review</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── SUSPENDED ── -->
+    <div class="page" id="pg-suspended">
+      <div class="table-card">
+        <div class="tc-head"><h3>Suspended vendors</h3><span class="tc-count">62 vendors</span></div>
+        <table>
+          <thead><tr><th>Vendor</th><th>Category</th><th>City</th><th>Suspended on</th><th>Reason</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:#888">K</div><div><div class="v-name">Kumar Tent Works</div><div class="v-cat">Jaipur</div></div></div></td><td>⛺ Tent House</td><td>Jaipur</td><td>10 Apr 2026</td><td><span class="sp suspended">3 complaint reports</span></td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(5)">View</button><button class="ab ab-approve" onclick="toast('✅ Vendor reinstated!')">Reinstate</button><button class="ab ab-reject" onclick="toast('🗑️ Vendor permanently removed.')">Remove</button></div></td></tr>
+            <tr><td><div class="vendor-cell"><div class="v-av" style="background:#888">B</div><div><div class="v-name">Best Caterers Co.</div><div class="v-cat">Mumbai</div></div></div></td><td>🍽️ Catering</td><td>Mumbai</td><td>5 Apr 2026</td><td><span class="sp suspended">No-show on booking</span></td><td><div class="act-btns"><button class="ab ab-view" onclick="openDetail(1)">View</button><button class="ab ab-approve" onclick="toast('✅ Vendor reinstated!')">Reinstate</button><button class="ab ab-reject" onclick="toast('🗑️ Vendor permanently removed.')">Remove</button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ANALYTICS ── -->
+    <div class="page" id="pg-analytics">
+      <div class="stats">
+        <div class="sc"><div class="sc-top"><span class="sc-ic">📈</span><span class="sc-badge up">+23%</span></div><div class="sc-val">5,248</div><div class="sc-lbl">Total vendors</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">📅</span><span class="sc-badge up">+12%</span></div><div class="sc-val">143</div><div class="sc-lbl">New this month</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">💰</span><span class="sc-badge up">+18%</span></div><div class="sc-val">₹9.2Cr</div><div class="sc-lbl">GMV this month</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">🏦</span></div><div class="sc-val">₹92L</div><div class="sc-lbl">Commission earned</div></div>
+        <div class="sc"><div class="sc-top"><span class="sc-ic">⭐</span></div><div class="sc-val">4.7</div><div class="sc-lbl">Platform rating</div></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="chart-card">
+          <div class="chart-title">New vendor registrations (2026)</div>
+          <div class="bar-chart">
+            <div class="bc-item"><div class="bc-val">62</div><div class="bc-bar" style="height:50px;background:var(--sf)"></div><div class="bc-lbl">Jan</div></div>
+            <div class="bc-item"><div class="bc-val">78</div><div class="bc-bar" style="height:62px;background:var(--sf)"></div><div class="bc-lbl">Feb</div></div>
+            <div class="bc-item"><div class="bc-val">95</div><div class="bc-bar" style="height:76px;background:var(--sf)"></div><div class="bc-lbl">Mar</div></div>
+            <div class="bc-item"><div class="bc-val">143</div><div class="bc-bar" style="height:100px;background:var(--sf)"></div><div class="bc-lbl">Apr</div></div>
+            <div class="bc-item" style="opacity:0.35"><div class="bc-val">—</div><div class="bc-bar" style="height:60px;background:#ccc"></div><div class="bc-lbl">May</div></div>
+            <div class="bc-item" style="opacity:0.35"><div class="bc-val">—</div><div class="bc-bar" style="height:60px;background:#ccc"></div><div class="bc-lbl">Jun</div></div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Vendors by category</div>
+          <div class="cat-breakdown">
+            <div class="cb-row"><span class="cb-ic">📸</span><span class="cb-lbl">Photography</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:80%"></div></div><span class="cb-pct">24%</span></div>
+            <div class="cb-row"><span class="cb-ic">🍽️</span><span class="cb-lbl">Catering</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:65%"></div></div><span class="cb-pct">19%</span></div>
+            <div class="cb-row"><span class="cb-ic">🌸</span><span class="cb-lbl">Decoration</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:55%"></div></div><span class="cb-pct">16%</span></div>
+            <div class="cb-row"><span class="cb-ic">💄</span><span class="cb-lbl">Makeup</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:40%"></div></div><span class="cb-pct">12%</span></div>
+            <div class="cb-row"><span class="cb-ic">🎵</span><span class="cb-lbl">DJ / Music</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:30%"></div></div><span class="cb-pct">9%</span></div>
+            <div class="cb-row"><span class="cb-ic">🙏</span><span class="cb-lbl">Pandit Ji</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:25%"></div></div><span class="cb-pct">7%</span></div>
+            <div class="cb-row"><span class="cb-ic">➕</span><span class="cb-lbl">Others</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:43%"></div></div><span class="cb-pct">13%</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="analytics-grid">
+        <div class="chart-card">
+          <div class="chart-title">Top cities by vendor count</div>
+          <table class="city-table">
+            <tr><td>🏛️ Delhi NCR</td><td>2,100</td></tr>
+            <tr><td>🌊 Mumbai</td><td>1,800</td></tr>
+            <tr><td>🏙️ Hyderabad</td><td>1,240</td></tr>
+            <tr><td>🌿 Bangalore</td><td>1,100</td></tr>
+            <tr><td>🎨 Chennai</td><td>780</td></tr>
+            <tr><td>🌸 Pune</td><td>640</td></tr>
+            <tr><td>🕌 Jaipur</td><td>520</td></tr>
+            <tr><td>⛪ Kochi</td><td>410</td></tr>
+          </table>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Plan distribution</div>
+          <div class="cat-breakdown">
+            <div class="cb-row"><span class="cb-ic">🆓</span><span class="cb-lbl">Starter (Free)</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:55%;background:#888"></div></div><span class="cb-pct">55%</span></div>
+            <div class="cb-row"><span class="cb-ic">⭐</span><span class="cb-lbl">Growth ₹999/mo</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:35%"></div></div><span class="cb-pct">35%</span></div>
+            <div class="cb-row"><span class="cb-ic">💎</span><span class="cb-lbl">Premium ₹2,499/mo</span><div class="cb-bar-bg"><div class="cb-bar-fill" style="width:10%;background:var(--purple)"></div></div><span class="cb-pct">10%</span></div>
+          </div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bdr)">
+            <div style="font-size:0.78rem;color:var(--mut);margin-bottom:4px">Monthly subscription revenue</div>
+            <div style="font-size:1.4rem;font-weight:700;color:var(--sf)">₹32.4L <span style="font-size:0.72rem;color:var(--mut);font-weight:400">/month</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div class="page" id="pg-settings">
+      <div class="table-card">
+        <div class="tc-head"><h3>Platform settings</h3></div>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--iv);border-radius:10px;border:1px solid var(--bdr)">
+            <div><div style="font-weight:600;font-size:0.88rem">Platform commission rate</div><div style="font-size:0.75rem;color:var(--mut)">Applied on all confirmed bookings</div></div>
+            <div style="display:flex;align-items:center;gap:8px"><strong style="font-size:1.1rem;color:var(--sf)">10%</strong><button class="ab ab-view" onclick="toast('Commission rate editor opened!')">Edit</button></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--iv);border-radius:10px;border:1px solid var(--bdr)">
+            <div><div style="font-weight:600;font-size:0.88rem">Document review SLA</div><div style="font-size:0.75rem;color:var(--mut)">Target time for vendor approval</div></div>
+            <div style="display:flex;align-items:center;gap:8px"><strong style="font-size:1.1rem;color:var(--sf)">24–48h</strong><button class="ab ab-view" onclick="toast('SLA settings opened!')">Edit</button></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--iv);border-radius:10px;border:1px solid var(--bdr)">
+            <div><div style="font-weight:600;font-size:0.88rem">Payout cycle</div><div style="font-size:0.75rem;color:var(--mut)">When vendors receive their earnings</div></div>
+            <div style="display:flex;align-items:center;gap:8px"><strong style="font-size:1.1rem;color:var(--sf)">25th monthly</strong><button class="ab ab-view" onclick="toast('Payout settings opened!')">Edit</button></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--iv);border-radius:10px;border:1px solid var(--bdr)">
+            <div><div style="font-weight:600;font-size:0.88rem">Auto-approve verified vendors</div><div style="font-size:0.75rem;color:var(--mut)">Skip manual review for returning, verified vendors</div></div>
+            <div style="display:flex;align-items:center;gap:8px"><strong style="font-size:1rem;color:var(--grn)">Enabled</strong><button class="ab ab-view" onclick="toast('Auto-approve settings changed!')">Toggle</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DETAIL SLIDE-IN PANEL -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail(event)">
+  <div class="detail-panel">
+    <div class="dp-head">
+      <h3 id="dp-title">Vendor Details</h3>
+      <button class="dp-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="dp-body">
+      <div class="dp-vendor-hero">
+        <div class="dp-av" id="dp-av">R</div>
+        <div>
+          <div class="dp-vname" id="dp-vname">Roshan Wedding Photography</div>
+          <div class="dp-vcats" id="dp-vcat">📸 Photography · Hyderabad</div>
+          <div style="margin-top:6px"><span class="sp pending" id="dp-vstatus">Pending Review</span></div>
+        </div>
+      </div>
+      <div class="dp-section">
+        <h4>Account details</h4>
+        <div class="dp-row"><span class="dp-lbl">Full name</span><span class="dp-val">Roshan Kumar</span></div>
+        <div class="dp-row"><span class="dp-lbl">Phone</span><span class="dp-val">+91 98765 43210</span></div>
+        <div class="dp-row"><span class="dp-lbl">Email</span><span class="dp-val">roshan@email.com</span></div>
+        <div class="dp-row"><span class="dp-lbl">Applied</span><span class="dp-val">20 Apr 2026, 10:32 AM</span></div>
+      </div>
+      <div class="dp-section">
+        <h4>Business details</h4>
+        <div class="dp-row"><span class="dp-lbl">Business name</span><span class="dp-val">Roshan Wedding Photography</span></div>
+        <div class="dp-row"><span class="dp-lbl">Experience</span><span class="dp-val">5–10 years</span></div>
+        <div class="dp-row"><span class="dp-lbl">Team size</span><span class="dp-val">2–5 people</span></div>
+        <div class="dp-row"><span class="dp-lbl">City</span><span class="dp-val">Hyderabad — Banjara Hills</span></div>
+        <div class="dp-row"><span class="dp-lbl">Travel coverage</span><span class="dp-val">Pan India</span></div>
+        <div class="dp-row"><span class="dp-lbl">Plan selected</span><span class="dp-val">Growth — ₹999/mo</span></div>
+      </div>
+      <div class="dp-section">
+        <h4>Services listed</h4>
+        <div>
+          <span class="svc-chip">Basic Wedding Photography — ₹45,000/event</span>
+          <span class="svc-chip">Cinematic Film — ₹75,000/event</span>
+          <span class="svc-chip">Pre-Wedding Shoot — ₹25,000/session</span>
+        </div>
+      </div>
+      <div class="dp-section">
+        <h4>Events covered</h4>
+        <div>
+          <span class="svc-chip">💍 Wedding</span>
+          <span class="svc-chip">💒 Engagement</span>
+          <span class="svc-chip">🌿 Haldi</span>
+          <span class="svc-chip">🎂 Birthday</span>
+          <span class="svc-chip">🍼 Cradle</span>
+        </div>
+      </div>
+      <div class="dp-section">
+        <h4>Document verification</h4>
+        <div class="doc-item"><span style="font-size:0.9rem">📄</span><span style="font-size:0.8rem;font-weight:600">Aadhaar card</span><span class="doc-status ok">✅ Verified</span></div>
+        <div class="doc-item"><span style="font-size:0.9rem">📋</span><span style="font-size:0.8rem;font-weight:600">PAN card</span><span class="doc-status ok">✅ Uploaded</span></div>
+        <div class="doc-item"><span style="font-size:0.9rem">🏦</span><span style="font-size:0.8rem;font-weight:600">Bank account proof</span><span class="doc-status ok">✅ Uploaded</span></div>
+        <div class="doc-item"><span style="font-size:0.9rem">🖼️</span><span style="font-size:0.8rem;font-weight:600">Portfolio samples</span><span class="doc-status ok">✅ 8 files</span></div>
+        <div class="doc-item"><span style="font-size:0.9rem">📋</span><span style="font-size:0.8rem;font-weight:600">GST certificate</span><span class="doc-status missing">— Not provided</span></div>
+      </div>
+      <div class="dp-section">
+        <h4>Add review note</h4>
+        <textarea class="dp-note" rows="2" placeholder="Internal note (optional — visible to admin team only)..."></textarea>
+      </div>
+    </div>
+    <div class="dp-footer">
+      <div class="dp-actions">
+        <button class="dp-approve" onclick="approveFromPanel()">✅ Approve Vendor</button>
+        <button class="dp-reject-btn" onclick="rejectFromPanel()">❌ Reject Application</button>
+      </div>
+      <div style="text-align:center;font-size:0.72rem;color:var(--mut)">Vendor will be notified via SMS + email on decision</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PAGES={approvals:'Pending Approvals',all:'All Vendors',approved:'Approved Vendors',rejected:'Rejected Applications',suspended:'Suspended Vendors',analytics:'Analytics',settings:'Platform Settings'};
+function gp(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('act'));
+  document.getElementById('pg-'+id).classList.add('act');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('act'));
+  if(el)el.classList.add('act');
+  document.getElementById('ptitle').textContent=PAGES[id]||id;
+}
+function setFilter(el){document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('act'));el.classList.add('act');}
+
+const VENDORS={
+  1:{name:'Roshan Photography',cat:'📸 Photography · Hyderabad',av:'R',col:'linear-gradient(135deg,#E8560A,#B03020)'},
+  2:{name:'Saffron Kitchen Catering',cat:'🍽️ Catering · Mumbai',av:'S',col:'linear-gradient(135deg,#1565C0,#0097A7)'},
+  3:{name:'Ayesha Bridal Studio',cat:'💄 Bridal Makeup · Bangalore',av:'A',col:'linear-gradient(135deg,#E91E63,#9C27B0)'},
+  4:{name:'Meenakshi Decorators',cat:'🌸 Decoration · Chennai',av:'M',col:'linear-gradient(135deg,#2E7D32,#00796B)'},
+  5:{name:'Vijay Tent House',cat:'⛺ Tent House · Jaipur',av:'V',col:'linear-gradient(135deg,#F4A300,#E8560A)'},
+  6:{name:'Pt. Ramesh Sharma',cat:'🙏 Pandit Ji · Delhi NCR',av:'P',col:'linear-gradient(135deg,#BF360C,#E65100)'},
+  7:{name:'Harmony Music Band',cat:'🎺 Brass Band · Pune',av:'H',col:'linear-gradient(135deg,#1A237E,#283593)'}
+};
+let currentVendorId=null;
+function openDetail(id){
+  const v=VENDORS[id]||VENDORS[1];
+  currentVendorId=id;
+  document.getElementById('dp-title').textContent='Vendor Application';
+  document.getElementById('dp-av').textContent=v.av;
+  document.getElementById('dp-av').style.background=v.col;
+  document.getElementById('dp-vname').textContent=v.name;
+  document.getElementById('dp-vcat').textContent=v.cat;
+  document.getElementById('detailOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePanel(){document.getElementById('detailOverlay').classList.remove('open');document.body.style.overflow='';}
+function closeDetail(e){if(e.target===document.getElementById('detailOverlay'))closePanel();}
+function approveFromPanel(){
+  closePanel();
+  if(currentVendorId){
+    const row=document.querySelector(`tr[data-id="${currentVendorId}"]`);
+    if(row){row.querySelector('td:nth-child(7)').innerHTML='<span class="sp approved">Approved</span>';row.querySelector('.act-btns').innerHTML='<span style="font-size:0.75rem;color:var(--grn);font-weight:600">✅ Live</span>';}
+  }
+  toast('✅ Vendor approved! Profile is now live on Utsav.in');
+}
+function rejectFromPanel(){
+  closePanel();
+  if(currentVendorId){
+    const row=document.querySelector(`tr[data-id="${currentVendorId}"]`);
+    if(row){row.querySelector('td:nth-child(7)').innerHTML='<span class="sp rejected">Rejected</span>';row.querySelector('.act-btns').innerHTML='<span style="font-size:0.75rem;color:var(--red);font-weight:600">❌ Rejected</span>';}
+  }
+  toast('❌ Application rejected. Vendor notified via SMS.');
+}
+function approveVendor(id,btn){
+  const row=btn.closest('tr');
+  row.querySelector('td:nth-child(7)').innerHTML='<span class="sp approved">Approved</span>';
+  row.querySelector('.act-btns').innerHTML='<span style="font-size:0.75rem;color:var(--grn);font-weight:600">✅ Live</span>';
+  toast('✅ Vendor approved & live on Utsav.in!');
+}
+function rejectVendor(id,btn){
+  const row=btn.closest('tr');
+  row.querySelector('td:nth-child(7)').innerHTML='<span class="sp rejected">Rejected</span>';
+  row.querySelector('.act-btns').innerHTML='<span style="font-size:0.75rem;color:var(--red);font-weight:600">❌ Rejected</span>';
+  toast('❌ Application rejected. Vendor notified.');
+}
+let tt;function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),3500);}
+</script>
+</body>
+</html>
