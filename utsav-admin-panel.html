@@ -528,33 +528,85 @@ function openDetail(id){
 }
 function closePanel(){document.getElementById('detailOverlay').classList.remove('open');document.body.style.overflow='';}
 function closeDetail(e){if(e.target===document.getElementById('detailOverlay'))closePanel();}
-function approveFromPanel(){
+async function approveFromPanel() {
+  if (!currentVendorId) return;
+  const res  = await fetch(`${API}/api/admin/approve/${currentVendorId}`, { method: 'POST' });
+  const data = await res.json();
   closePanel();
-  if(currentVendorId){
-    const row=document.querySelector(`tr[data-id="${currentVendorId}"]`);
-    if(row){row.querySelector('td:nth-child(7)').innerHTML='<span class="sp approved">Approved</span>';row.querySelector('.act-btns').innerHTML='<span style="font-size:0.75rem;color:var(--grn);font-weight:600">✅ Live</span>';}
+  if (data.success) {
+    const row = document.querySelector(`tr[data-id="${currentVendorId}"]`);
+    if (row) {
+      row.querySelector('td:nth-child(7)').innerHTML = '<span class="sp approved">Approved</span>';
+      row.querySelector('.act-btns').innerHTML = '<span style="font-size:0.75rem;color:var(--grn);font-weight:600">✅ Live</span>';
+    }
+    toast('✅ Vendor approved! Login email sent automatically.');
+  } else {
+    toast('❌ Error: ' + data.error);
   }
-  toast('✅ Vendor approved! Profile is now live on Utsav.in');
 }
-function rejectFromPanel(){
+
+async function rejectFromPanel() {
+  if (!currentVendorId) return;
+  const reason = prompt('Reason for rejection (will be emailed to vendor):');
+  if (!reason) return;
+  const res  = await fetch(`${API}/api/admin/reject/${currentVendorId}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reason })
+  });
+  const data = await res.json();
   closePanel();
-  if(currentVendorId){
-    const row=document.querySelector(`tr[data-id="${currentVendorId}"]`);
-    if(row){row.querySelector('td:nth-child(7)').innerHTML='<span class="sp rejected">Rejected</span>';row.querySelector('.act-btns').innerHTML='<span style="font-size:0.75rem;color:var(--red);font-weight:600">❌ Rejected</span>';}
+  if (data.success) {
+    const row = document.querySelector(`tr[data-id="${currentVendorId}"]`);
+    if (row) {
+      row.querySelector('td:nth-child(7)').innerHTML = '<span class="sp rejected">Rejected</span>';
+      row.querySelector('.act-btns').innerHTML = '<span style="font-size:0.75rem;color:var(--red);font-weight:600">❌ Rejected</span>';
+    }
+    toast('❌ Rejection email sent to vendor.');
+  } else {
+    toast('❌ Error: ' + data.error);
   }
-  toast('❌ Application rejected. Vendor notified via SMS.');
 }
-function approveVendor(id,btn){
-  const row=btn.closest('tr');
-  row.querySelector('td:nth-child(7)').innerHTML='<span class="sp approved">Approved</span>';
-  row.querySelector('.act-btns').innerHTML='<span style="font-size:0.75rem;color:var(--grn);font-weight:600">✅ Live</span>';
-  toast('✅ Vendor approved & live on Utsav.in!');
+const API = 'https://ems-1-4.onrender.com';
+
+async function approveVendor(id, btn) {
+  btn.textContent = '...';
+  btn.disabled = true;
+  const res  = await fetch(`${API}/api/admin/approve/${id}`, { method: 'POST' });
+  const data = await res.json();
+  if (data.success) {
+    const row = btn.closest('tr');
+    row.querySelector('td:nth-child(7)').innerHTML = '<span class="sp approved">Approved</span>';
+    row.querySelector('.act-btns').innerHTML = '<span style="font-size:0.75rem;color:var(--grn);font-weight:600">✅ Live</span>';
+    toast('✅ Vendor approved! Login email sent automatically.');
+  } else {
+    toast('❌ Error: ' + data.error);
+    btn.textContent = 'Approve';
+    btn.disabled = false;
+  }
 }
-function rejectVendor(id,btn){
-  const row=btn.closest('tr');
-  row.querySelector('td:nth-child(7)').innerHTML='<span class="sp rejected">Rejected</span>';
-  row.querySelector('.act-btns').innerHTML='<span style="font-size:0.75rem;color:var(--red);font-weight:600">❌ Rejected</span>';
-  toast('❌ Application rejected. Vendor notified.');
+
+async function rejectVendor(id, btn) {
+  const reason = prompt('Reason for rejection (will be emailed to vendor):');
+  if (!reason) return;
+  btn.textContent = '...';
+  btn.disabled = true;
+  const res  = await fetch(`${API}/api/admin/reject/${id}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reason })
+  });
+  const data = await res.json();
+  if (data.success) {
+    const row = btn.closest('tr');
+    row.querySelector('td:nth-child(7)').innerHTML = '<span class="sp rejected">Rejected</span>';
+    row.querySelector('.act-btns').innerHTML = '<span style="font-size:0.75rem;color:var(--red);font-weight:600">❌ Rejected</span>';
+    toast('❌ Rejection email sent to vendor.');
+  } else {
+    toast('❌ Error: ' + data.error);
+    btn.textContent = 'Reject';
+    btn.disabled = false;
+  }
 }
 let tt;function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),3500);}
 </script>
