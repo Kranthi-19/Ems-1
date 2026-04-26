@@ -590,7 +590,19 @@ input:focus,select:focus,textarea:focus{border-color:var(--sf);background:white}
             <div class="wn-item"><div class="wn-num">3</div><span>Customers start discovering your profile and sending booking requests</span></div>
             <div class="wn-item"><div class="wn-num">4</div><span>Accept bookings, complete events, and get paid — payouts processed on the 25th of each month</span></div>
           </div>
-          <button class="btn-dashboard" onclick="window.location.href='utsav-vendor-partner.html'">Go to Vendor Dashboard →</button>
+<div style="background:#EBF8F0;border:1px solid #1E9050;border-radius:14px;padding:20px;text-align:left;margin-bottom:24px;">
+  <div style="font-size:1.5rem;margin-bottom:8px;">📧</div>
+  <div style="font-weight:700;font-size:0.95rem;color:#1E9050;margin-bottom:6px;">What happens next?</div>
+  <div style="font-size:0.85rem;color:#7A5F37;line-height:1.8;">
+    ✅ Our team will review your documents within <strong>24–48 hours</strong><br>
+    📧 You will receive an <strong>approval email</strong> on <strong id="succ_email"></strong><br>
+    📱 An SMS will also be sent to your registered mobile number<br>
+    🔐 Once approved, use your <strong>registered email & password</strong> to login
+  </div>
+</div>
+<div style="font-size:0.82rem;color:#7A5F37;text-align:center;">
+  Questions? Contact us at <strong>support@utsav.in</strong>
+</div>        
         </div>
       </div>
     </div>
@@ -632,6 +644,9 @@ function showStep(n){
   if(n>STEPS.length){
     document.getElementById('step-success').classList.add('act');
     document.getElementById('succ_name').textContent=(document.getElementById('s1_name').value||'Roshan').split(' ')[0];
+    const em = document.getElementById('s1_email');
+   if(em && document.getElementById('succ_email')) 
+   document.getElementById('succ_email').textContent = em.value;
     return;
   }
   document.getElementById(STEPS[n-1].id).classList.add('act');
