@@ -569,6 +569,39 @@ async function rejectFromPanel() {
 }
 const API = 'https://ems-1-4.onrender.com';
 
+window.addEventListener('DOMContentLoaded', loadPendingVendors);
+
+async function loadPendingVendors() {
+  try {
+    const res  = await fetch(`${API}/api/admin/vendors?status=pending`);
+    const data = await res.json();
+    const tbody = document.getElementById('pending-tbody');
+    if (!data.vendors || data.vendors.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--mut)">No pending vendors</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.vendors.map(v => `
+      <tr data-id="${v.id}">
+        <td><div class="vendor-cell">
+          <div class="v-av" style="background:linear-gradient(135deg,#E8560A,#B03020)">${v.name ? v.name[0].toUpperCase() : 'V'}</div>
+          <div><div class="v-name">${v.business_name || v.name}</div><div class="v-cat">${v.phone}</div></div>
+        </div></td>
+        <td>${v.primary_category || '—'}</td>
+        <td>${v.primary_city || '—'}</td>
+        <td><span class="sp review">${v.plan || 'Starter'}</span></td>
+        <td>${new Date(v.created_at).toLocaleDateString()}</td>
+        <td><span style="color:var(--grn);font-weight:600;font-size:0.78rem">✅ Submitted</span></td>
+        <td><span class="sp pending">Pending</span></td>
+        <td><div class="act-btns">
+          <button class="ab ab-approve" onclick="approveVendor('${v.id}',this)">Approve</button>
+          <button class="ab ab-reject" onclick="rejectVendor('${v.id}',this)">Reject</button>
+        </div></td>
+      </tr>
+    `).join('');
+  } catch(err) {
+    console.error(err);
+  }
+}
 async function approveVendor(id, btn) {
   btn.textContent = '...';
   btn.disabled = true;
