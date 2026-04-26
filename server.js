@@ -12,7 +12,6 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// Create table
 pool.query(`
   CREATE TABLE IF NOT EXISTS bookings (
     id SERIAL PRIMARY KEY,
@@ -60,7 +59,6 @@ app.get('/api/bookings', async (req, res) => {
   }
 });
 
-// ── VENDOR & ADMIN ROUTES ──
 const vendorRoutes = require('./vendor');
 const adminRoutes  = require('./admin');
 
