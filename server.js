@@ -61,8 +61,8 @@ app.get('/api/bookings', async (req, res) => {
 });
 
 // ── VENDOR & ADMIN ROUTES ──
-const vendorRoutes = require('./routes/vendor');
-const adminRoutes  = require('./routes/admin');
+const vendorRoutes = require('./vendor');
+const adminRoutes  = require('./admin');
 
 app.use('/api/vendor', vendorRoutes);
 app.use('/api/admin',  adminRoutes);
