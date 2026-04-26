@@ -652,8 +652,63 @@ function showStep(n){
 function goNext(){cur++;showStep(cur);}
 function goBack(){if(cur>1){cur--;showStep(cur);}}
 function goStep(n){cur=n;showStep(cur);}
-function submitReg(){cur=STEPS.length+1;showStep(cur);}
+async function submitReg() {
+  const btn = document.querySelector('.btn-next');
+  btn.textContent = '⏳ Submitting...';
+  btn.disabled = true;
 
+  const payload = {
+    // Page 1
+    name: document.getElementById('s1_name').value,
+    email: document.getElementById('s1_email').value,
+    phone: document.getElementById('s1_phone').value,
+    password: document.querySelectorAll('input[type=password]')[0].value,
+
+    // Page 2
+    business_name: document.getElementById('s2_bname').value,
+
+    // Page 3
+    primary_category: selCatName,
+    event_types: [...document.querySelectorAll('.ck-item.sel')].map(el => el.textContent.trim()),
+
+    // Page 4
+    services: [...document.querySelectorAll('.svc-row')].map(row => ({
+      name: row.querySelectorAll('input')[0].value,
+      price: row.querySelectorAll('input')[1].value,
+      unit: row.querySelector('select').value
+    })),
+
+    // Page 5
+    primary_city: document.getElementById('s5_city').value,
+    available_days: [...document.querySelectorAll('.day-pill.sel')].map(el => el.textContent.trim()),
+    other_cities: [...document.querySelectorAll('.city-tag')].map(el => el.textContent.replace('✕','').trim()),
+
+    // Page 7
+    plan: selPlanName
+  };
+
+  try {
+    const res = await fetch('https://YOUR-RENDER-URL.onrender.com/api/vendor/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      cur = STEPS.length + 1;
+      showStep(cur);
+    } else {
+      alert('Error: ' + data.error);
+      btn.textContent = '🚀 Submit Registration';
+      btn.disabled = false;
+    }
+  } catch (err) {
+    alert('Server error. Please try again.');
+    btn.textContent = '🚀 Submit Registration';
+    btn.disabled = false;
+  }
+}
 function selCat(el,name){
   document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('sel'));
   el.classList.add('sel');selCatName=name;
