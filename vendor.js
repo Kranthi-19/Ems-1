@@ -56,8 +56,15 @@ router.post('/register', async (req, res) => {
       .select()
       .single();
 
-    if (error) return res.json({ success: false, error: error.message });
-
+if (error) {
+  if (error.message.includes('vendors_email_key')) {
+    return res.json({ 
+      success: false, 
+      error: 'This email is already registered. Please login instead.' 
+    });
+  }
+  return res.json({ success: false, error: error.message });
+}
     await mailer.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
