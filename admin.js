@@ -52,7 +52,7 @@ router.post('/approve/:vendor_id', async (req, res) => {
           <li><strong>Email:</strong> ${vendor.email}</li>
           <li><strong>Password:</strong> the password you set during registration</li>
         </ul>
-        <a href="${process.env.VENDOR_DASHBOARD_URL}/login"
+        <a href="${process.env.VENDOR_DASHBOARD_URL}"
            style="background:#E8560A;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin-top:12px;">
           Login to Dashboard
         </a>
