@@ -668,7 +668,11 @@ function goNext(){cur++;showStep(cur);}
 function goBack(){if(cur>1){cur--;showStep(cur);}}
 function goStep(n){cur=n;showStep(cur);}
 async function submitReg() {
-  const btn = document.querySelector('.btn-next');
+  // Prevent double submit
+  if (window._submitting) return;
+  window._submitting = true;
+
+  const btn = document.querySelector('#step-8 .btn-next');
   btn.textContent = '⏳ Submitting...';
   btn.disabled = true;
 
@@ -703,27 +707,31 @@ async function submitReg() {
   };
 
   try {
-const res = await fetch('https://ems-1-4.onrender.com/api/vendor/register', {      method: 'POST',
+    const res = await fetch('https://ems-1-4.onrender.com/api/vendor/register', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     const data = await res.json();
 
     if (data.success) {
+      window._submitting = false;
       cur = STEPS.length + 1;
       showStep(cur);
     } else {
       alert('Error: ' + data.error);
       btn.textContent = '🚀 Submit Registration';
       btn.disabled = false;
+      window._submitting = false;
     }
   } catch (err) {
     alert('Server error. Please try again.');
     btn.textContent = '🚀 Submit Registration';
     btn.disabled = false;
+    window._submitting = false;
   }
 }
-function selCat(el,name){
+  function selCat(el,name){
   document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('sel'));
   el.classList.add('sel');selCatName=name;
 }
