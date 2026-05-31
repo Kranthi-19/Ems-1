@@ -16,7 +16,7 @@ const mailer = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
-  family: 4  // ✅ Force IPv4 to fix ENETUNREACH error
+  family: 4
 });
 
 // REGISTER
@@ -73,36 +73,42 @@ router.post('/register', async (req, res) => {
       return res.json({ success: false, error: error.message });
     }
 
-    await mailer.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Welcome to Utsav — Registration Received!',
-      html: `
-        <h2>Hi ${name}!</h2>
-        <p>Thank you for registering as a vendor on <strong>Utsav</strong>.</p>
-        <p>Your application is under review. Our admin will verify your details within 24–48 hours.</p>
-        <p>You will receive another email once your account is approved with your login link.</p>
-        <p>— Team Utsav</p>
-      `
-    });
-
-    await mailer.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.ADMIN_EMAIL,
-      subject: `New Vendor Registration — ${business_name}`,
-      html: `
-        <h3>New vendor registration received</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Business:</strong> ${business_name}</p>
-        <p><strong>Category:</strong> ${primary_category}</p>
-        <p><strong>City:</strong> ${primary_city}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Plan:</strong> ${plan}</p>
-        <a href="${process.env.ADMIN_PANEL_URL}">Open Admin Panel</a>
-      `
-    });
-
+    // ✅ Send success response FIRST — before emails
     res.json({ success: true, vendor_id: vendor.id });
+
+    // ✅ Emails sent AFTER — if they fail, registration still works
+    try {
+      await mailer.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Welcome to Utsav — Registration Received!',
+        html: `
+          <h2>Hi ${name}!</h2>
+          <p>Thank you for registering as a vendor on <strong>Utsav</strong>.</p>
+          <p>Your application is under review. Our admin will verify your details within 24–48 hours.</p>
+          <p>You will receive another email once your account is approved with your login link.</p>
+          <p>— Team Utsav</p>
+        `
+      });
+
+      await mailer.sendMail({
+        from: process.env.EMAIL_USER,
+        to: process.env.ADMIN_EMAIL,
+        subject: `New Vendor Registration — ${business_name}`,
+        html: `
+          <h3>New vendor registration received</h3>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Business:</strong> ${business_name}</p>
+          <p><strong>Category:</strong> ${primary_category}</p>
+          <p><strong>City:</strong> ${primary_city}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Plan:</strong> ${plan}</p>
+          <a href="${process.env.ADMIN_PANEL_URL}">Open Admin Panel</a>
+        `
+      });
+    } catch (mailErr) {
+      console.error("EMAIL ERROR (non-fatal):", mailErr.message);
+    }
 
   } catch (err) {
     console.error("REGISTER ERROR:", err.message);
