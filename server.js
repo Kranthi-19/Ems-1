@@ -1,17 +1,15 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
-const router = express.Router();
-
 
 const app = express();
-
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
+  family: 4  // ✅ Force IPv4 to fix ENETUNREACH error
 });
 
 pool.query(`
@@ -63,7 +61,6 @@ app.get('/api/bookings', async (req, res) => {
 
 const vendorRoutes = require('./vendor');
 const adminRoutes  = require('./admin');
-
 app.use('/api/vendor', vendorRoutes);
 app.use('/api/admin',  adminRoutes);
 
