@@ -9,11 +9,14 @@ const supabase = createClient(
 );
 
 const mailer = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
+  tls: { rejectUnauthorized: false },
   family: 4  // ✅ Force IPv4
 });
 
@@ -43,7 +46,7 @@ router.post('/approve/:vendor_id', async (req, res) => {
     // ✅ Send success response FIRST
     res.json({ success: true });
 
-    // ✅ Emails and notifications AFTER — non-fatal
+    // ✅ Emails AFTER — non-fatal
     try {
       await mailer.sendMail({
         from: process.env.EMAIL_USER,
