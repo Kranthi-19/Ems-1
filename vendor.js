@@ -57,7 +57,13 @@ router.post('/register', async (req, res) => {
       .single();
 
 if (error) {
-  if (error.message.includes('vendors_email_key')) {
+  console.error("SUPABASE ERROR:", JSON.stringify(error));
+  if (
+    error.message.includes('vendors_email_key') ||
+    error.message.includes('duplicate') ||
+    error.message.includes('unique') ||
+    error.code === '23505'
+  ) {
     return res.json({ 
       success: false, 
       error: 'This email is already registered. Please login instead.' 
