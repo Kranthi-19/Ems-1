@@ -1,17 +1,14 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
-
+const router = express.Router();
 const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
-
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  family: 4  // ✅ Force IPv4 to fix ENETUNREACH error
+  ssl: { rejectUnauthorized: false }
 });
-
 pool.query(`
   CREATE TABLE IF NOT EXISTS bookings (
     id SERIAL PRIMARY KEY,
@@ -22,9 +19,7 @@ pool.query(`
   )
 `).then(() => console.log("✅ Table ready"))
   .catch(err => console.error("❌ Table error:", err.message));
-
 app.get('/', (req, res) => res.send('🚀 Running!'));
-
 app.get('/api/test-db', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -33,7 +28,6 @@ app.get('/api/test-db', async (req, res) => {
     res.status(500).json({ connected: false, error: err.message });
   }
 });
-
 app.post('/api/booking', async (req, res) => {
   console.log("📩 Received:", req.body);
   const { name, phone, email, eventType, eventDate, guestCount, city, budget } = req.body;
@@ -49,7 +43,6 @@ app.post('/api/booking', async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
 app.get('/api/bookings', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM bookings ORDER BY created_at DESC');
@@ -58,11 +51,9 @@ app.get('/api/bookings', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 const vendorRoutes = require('./vendor');
 const adminRoutes  = require('./admin');
 app.use('/api/vendor', vendorRoutes);
 app.use('/api/admin',  adminRoutes);
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => console.log(`🚀 Server on port ${PORT}`));
