@@ -11,12 +11,15 @@ const supabase = createClient(
 );
 
 const mailer = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
-  family: 4
+  tls: { rejectUnauthorized: false },
+  family: 4  // ✅ Force IPv4
 });
 
 // REGISTER
@@ -73,10 +76,10 @@ router.post('/register', async (req, res) => {
       return res.json({ success: false, error: error.message });
     }
 
-    // ✅ Send success response FIRST — before emails
+    // ✅ Send success response FIRST
     res.json({ success: true, vendor_id: vendor.id });
 
-    // ✅ Emails sent AFTER — if they fail, registration still works
+    // ✅ Emails AFTER — non-fatal
     try {
       await mailer.sendMail({
         from: process.env.EMAIL_USER,
