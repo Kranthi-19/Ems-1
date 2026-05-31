@@ -15,7 +15,8 @@ const mailer = nodemailer.createTransport({
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  }
+  },
+  family: 4  // ✅ Force IPv4 to fix ENETUNREACH error
 });
 
 // REGISTER
@@ -56,21 +57,22 @@ router.post('/register', async (req, res) => {
       .select()
       .single();
 
-if (error) {
-  console.error("SUPABASE ERROR:", JSON.stringify(error));
-  if (
-    error.message.includes('vendors_email_key') ||
-    error.message.includes('duplicate') ||
-    error.message.includes('unique') ||
-    error.code === '23505'
-  ) {
-    return res.json({ 
-      success: false, 
-      error: 'This email is already registered. Please login instead.' 
-    });
-  }
-  return res.json({ success: false, error: error.message });
-}
+    if (error) {
+      console.error("SUPABASE ERROR:", JSON.stringify(error));
+      if (
+        error.message.includes('vendors_email_key') ||
+        error.message.includes('duplicate') ||
+        error.message.includes('unique') ||
+        error.code === '23505'
+      ) {
+        return res.json({ 
+          success: false, 
+          error: 'This email is already registered. Please login instead.' 
+        });
+      }
+      return res.json({ success: false, error: error.message });
+    }
+
     await mailer.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -103,6 +105,7 @@ if (error) {
     res.json({ success: true, vendor_id: vendor.id });
 
   } catch (err) {
+    console.error("REGISTER ERROR:", err.message);
     res.json({ success: false, error: err.message });
   }
 });
@@ -161,6 +164,7 @@ router.post('/login', async (req, res) => {
     });
 
   } catch (err) {
+    console.error("LOGIN ERROR:", err.message);
     res.json({ success: false, error: err.message });
   }
 });
@@ -190,6 +194,7 @@ router.get('/dashboard/:vendor_id', async (req, res) => {
     });
 
   } catch (err) {
+    console.error("DASHBOARD ERROR:", err.message);
     res.json({ success: false, error: err.message });
   }
 });
