@@ -1554,7 +1554,7 @@
   const city = document.getElementById("city").value;
   const budget = document.getElementById("budget").value;
 
-  fetch("https://ems-1-8p2k.onrender.com/api/booking", {
+  fetch("https://ems-1-4.onrender.com/api/booking", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, phone, email, eventType, eventDate, guestCount, city, budget })
