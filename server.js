@@ -9,7 +9,7 @@ app.use(express.json());
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
-  family: 4  // ✅ Force IPv4
+  family: 4
 });
 
 pool.query(`
@@ -63,6 +63,16 @@ const vendorRoutes = require('./vendor');
 const adminRoutes  = require('./admin');
 app.use('/api/vendor', vendorRoutes);
 app.use('/api/admin',  adminRoutes);
+
+// ✅ Catch uncaught errors so they show in logs
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err.message);
+  console.error(err.stack);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('UNHANDLED REJECTION:', reason);
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => console.log(`🚀 Server on port ${PORT}`));
