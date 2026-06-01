@@ -3,24 +3,14 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { createClient } = require('@supabase/supabase-js');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const mailer = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  tls: { rejectUnauthorized: false },
-  family: 4  // ✅ Force IPv4
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // REGISTER
 router.post('/register', async (req, res) => {
@@ -81,8 +71,8 @@ router.post('/register', async (req, res) => {
 
     // ✅ Emails AFTER — non-fatal
     try {
-      await mailer.sendMail({
-        from: process.env.EMAIL_USER,
+      await resend.emails.send({
+        from: 'Utsav <onboarding@resend.dev>',
         to: email,
         subject: 'Welcome to Utsav — Registration Received!',
         html: `
@@ -93,9 +83,10 @@ router.post('/register', async (req, res) => {
           <p>— Team Utsav</p>
         `
       });
+      console.log("✅ Vendor welcome email sent to:", email);
 
-      await mailer.sendMail({
-        from: process.env.EMAIL_USER,
+      await resend.emails.send({
+        from: 'Utsav <onboarding@resend.dev>',
         to: process.env.ADMIN_EMAIL,
         subject: `New Vendor Registration — ${business_name}`,
         html: `
@@ -109,6 +100,8 @@ router.post('/register', async (req, res) => {
           <a href="${process.env.ADMIN_PANEL_URL}">Open Admin Panel</a>
         `
       });
+      console.log("✅ Admin notification email sent");
+
     } catch (mailErr) {
       console.error("EMAIL ERROR (non-fatal):", mailErr.message);
     }
