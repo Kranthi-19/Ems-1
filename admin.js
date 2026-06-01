@@ -1,24 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { createClient } = require('@supabase/supabase-js');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const mailer = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  tls: { rejectUnauthorized: false },
-  family: 4  // ✅ Force IPv4
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ── GET ALL VENDORS ──
 router.get('/vendors', async (req, res) => {
@@ -48,8 +38,8 @@ router.post('/approve/:vendor_id', async (req, res) => {
 
     // ✅ Emails AFTER — non-fatal
     try {
-      await mailer.sendMail({
-        from: process.env.EMAIL_USER,
+      await resend.emails.send({
+        from: 'Utsav <onboarding@resend.dev>',
         to: vendor.email,
         subject: 'Your Utsav Vendor Account is Approved!',
         html: `
@@ -67,12 +57,14 @@ router.post('/approve/:vendor_id', async (req, res) => {
           <p>— Team Utsav</p>
         `
       });
+      console.log("✅ Approval email sent to vendor:", vendor.email);
 
       await supabase.from('notifications').insert([{
         vendor_id: vendor_id,
         title: 'Account Approved!',
         message: 'Your Utsav vendor profile is now live. Start receiving bookings!'
       }]);
+
     } catch (mailErr) {
       console.error("APPROVE EMAIL ERROR (non-fatal):", mailErr.message);
     }
@@ -103,8 +95,8 @@ router.post('/reject/:vendor_id', async (req, res) => {
 
     // ✅ Email AFTER — non-fatal
     try {
-      await mailer.sendMail({
-        from: process.env.EMAIL_USER,
+      await resend.emails.send({
+        from: 'Utsav <onboarding@resend.dev>',
         to: vendor.email,
         subject: 'Utsav Vendor Application Update',
         html: `
@@ -115,6 +107,8 @@ router.post('/reject/:vendor_id', async (req, res) => {
           <p>— Team Utsav</p>
         `
       });
+      console.log("✅ Rejection email sent to vendor:", vendor.email);
+
     } catch (mailErr) {
       console.error("REJECT EMAIL ERROR (non-fatal):", mailErr.message);
     }
